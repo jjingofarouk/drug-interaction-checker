@@ -9,15 +9,15 @@ Check out the live demo of the app here:
 ## Screenshots
 
 ### Home Screen
-![Home Screen](https://github.com/jjingofarouk/drug-interaction-checker/raw/main/images/home.png)
+![Home Screen](https://github.com/jjingofarouk/drug-interaction-checker/raw/main/images/home.jpeg)
 *Initial view of the Drug Interaction Checker*
 
 ### Search Interface
-![Search Interface](https://github.com/jjingofarouk/drug-interaction-checker/raw/main/images/search.png)
+![Search Interface](https://github.com/jjingofarouk/drug-interaction-checker/raw/main/images/searches.jpeg)
 *Medication search with autocomplete suggestions*
 
 ### Interaction Results
-![Interaction Results](https://github.com/jjingofarouk/drug-interaction-checker/raw/main/images/results.png)
+![Interaction Results](https://github.com/jjingofarouk/drug-interaction-checker/raw/main/images/results.JPG)
 *Detailed view of drug interaction results*
 
 
