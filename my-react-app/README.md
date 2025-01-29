@@ -1,70 +1,140 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Drug Interaction Checker
 
-## Available Scripts
+A **React-based web application** that allows users to check for potential drug interactions. Users can search for two medications and view known interactions or related suggestions.
 
-In the project directory, you can run:
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Search Medications**: Autocomplete search for medications using a comprehensive drug database.
+- **Interaction Details**: View detailed descriptions of known drug interactions.
+- **Related Suggestions**: Get suggestions for related interactions if no direct interactions are found.
+- **Responsive Design**: Works seamlessly on desktop and mobile devices.
+- **Clean UI**: Intuitive and user-friendly interface.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Live Demo
 
-### `npm run build`
+Check out the live demo of the app here:  
+[[Live Demo Link](https://drug-interaction-checker-ph3r.vercel.app/)](#)  
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Follow these steps to set up the project locally:
 
-### `npm run eject`
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/drug-interaction-checker.git
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. **Navigate to the project directory**:
+   ```bash
+   cd drug-interaction-checker
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. **Start the development server**:
+   ```bash
+   npm start
+   ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+5. **Open the app**:
+   Visit `http://localhost:3000` in your browser to view the app.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Technologies Used
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **React**: Front-end library for building user interfaces.
+- **CSS**: Styling for a clean and modern design.
+- **JSON Data**: Drug options and interactions stored in JSON files.
+- **Git & GitHub**: Version control and hosting.
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Project Structure
 
-### Analyzing the Bundle Size
+```
+drug-interaction-checker/
+├── public/                  # Static assets
+├── src/
+│   ├── components/          # Reusable React components
+│   ├── data/                # JSON data for drugs and interactions
+│   ├── App.js               # Main application component
+│   ├── index.js             # Entry point
+│   └── styles.css           # Global styles
+├── package.json             # Project dependencies
+├── README.md                # Project documentation
+└── .gitignore               # Files to ignore in Git
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## How It Works
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1. **Search for Medications**:
+   - Enter the name of the first and second medication in the search fields.
+   - The app provides autocomplete suggestions based on the drug database.
 
-### Advanced Configuration
+2. **View Interactions**:
+   - If a direct interaction exists between the two medications, it will be displayed with a detailed description.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+3. **Related Suggestions**:
+   - If no direct interaction is found, the app suggests related interactions involving the searched medications.
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Contributing
 
-### `npm run build` fails to minify
+Contributions are welcome! If you'd like to contribute to this project, please follow these steps:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Fork the repository.
+2. Create a new branch for your feature or bugfix:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m "Add your feature or fix"
+   ```
+4. Push to the branch:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+5. Open a pull request and describe your changes.
+
+---
+
+## License
+
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## Acknowledgments
+
+- **React Documentation**: For providing excellent resources and guides.
+- **Open Source Community**: For inspiring and supporting this project.
+
+---
+
+## Contact
+
+If you have any questions or feedback, feel free to reach out:
+
+- **Your Name**  
+- **Email**: jjingofarouq@gmail.com  
+
+
+---
+
+Enjoy using the **Drug Interaction Checker**! 🚀
