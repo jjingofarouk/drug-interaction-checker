@@ -5,30 +5,46 @@ import drugBankInteractions from './druginteractionsdata.json';
 import customDrugOptions from './DrugOptions2.json';
 import customInteractions from './druginteractionsdata2.json';
 
+// Developer Information
+const developerName = "Jjingo Farouk";
+
+// Color Themes for Modern Pharmacies
+const pharmacyTheme = {
+  primary: "#007BFF", // Blue for trust and professionalism
+  secondary: "#28A745", // Green for health and safety
+  background: "#F8F9FA", // Light gray for a clean and modern look
+  text: "#212529", // Dark gray for readability
+  warning: "#DC3545", // Red for warnings and alerts
+  success: "#28A745", // Green for success messages
+  info: "#17A2B8", // Teal for informational messages
+  cardBackground: "#FFFFFF", // White for card backgrounds
+  cardShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow for cards
+};
+
 // Separate InteractionCard component
 const InteractionCard = React.memo(({ interaction }) => (
-  <div className="interaction-card">
+  <div className="interaction-card" style={{ backgroundColor: pharmacyTheme.cardBackground, boxShadow: pharmacyTheme.cardShadow }}>
     <div className="interaction-header">
-      <div className="drug-name">{interaction.title}</div>
+      <div className="drug-name" style={{ color: pharmacyTheme.text }}>{interaction.title}</div>
       <div
         className="source-badge"
         style={{
-          backgroundColor: interaction.source === 'drugbank' ? '#EFF6FF' : '#F0FDF4',
+          backgroundColor: interaction.source === 'drugbank' ? pharmacyTheme.info : pharmacyTheme.success,
         }}
       >
         <div
           className="source-text"
           style={{
-            color: interaction.source === 'drugbank' ? '#1E40AF' : '#166534',
+            color: pharmacyTheme.cardBackground,
           }}
         >
           {interaction.source}
         </div>
       </div>
     </div>
-    <div className="interaction-text">{interaction.description}</div>
+    <div className="interaction-text" style={{ color: pharmacyTheme.text }}>{interaction.description}</div>
     {interaction.extended_description && (
-      <div className="extended-description">
+      <div className="extended-description" style={{ color: pharmacyTheme.text }}>
         {interaction.extended_description}
       </div>
     )}
@@ -37,13 +53,13 @@ const InteractionCard = React.memo(({ interaction }) => (
 
 // Separate SuggestionCard component
 const SuggestionCard = React.memo(({ suggestion }) => (
-  <div className="suggestion-card">
-    <div className="drug-name">
+  <div className="suggestion-card" style={{ backgroundColor: pharmacyTheme.cardBackground, boxShadow: pharmacyTheme.cardShadow }}>
+    <div className="drug-name" style={{ color: pharmacyTheme.text }}>
       {suggestion.drug1} + {suggestion.drug2}
     </div>
-    <div className="interaction-text">{suggestion.description}</div>
+    <div className="interaction-text" style={{ color: pharmacyTheme.text }}>{suggestion.description}</div>
     {suggestion.extended_description && (
-      <div className="extended-description">
+      <div className="extended-description" style={{ color: pharmacyTheme.text }}>
         {suggestion.extended_description}
       </div>
     )}
@@ -110,15 +126,17 @@ const DrugSearchInput = React.memo(({
             setShowSuggestions(false);
           }, 200);
         }}
+        style={{ backgroundColor: pharmacyTheme.cardBackground, color: pharmacyTheme.text }}
       />
       {showSuggestions && suggestions.length > 0 && (
-        <div className="suggestions-container">
+        <div className="suggestions-container" style={{ backgroundColor: pharmacyTheme.cardBackground, boxShadow: pharmacyTheme.cardShadow }}>
           <div className="suggestions-list">
             {suggestions.map((drug) => (
               <div
                 key={drug}
                 className="suggestion-item"
                 onClick={() => handleSelect(drug)}
+                style={{ color: pharmacyTheme.text }}
               >
                 <div className="suggestion-text">{drug}</div>
               </div>
@@ -264,17 +282,18 @@ const DrugInteractionChecker = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container" style={{ backgroundColor: pharmacyTheme.background }}>
       <div className="main-container" onClick={handleScreenPress}>
         <div className="main-scroll">
           <div className="header-container">
-            <div className="title">Drug Interaction Checker</div>
-            <div className="subtitle">Search for potential drug interactions</div>
+            <div className="title" style={{ color: pharmacyTheme.primary }}>Drug Interaction Checker</div>
+            <div className="subtitle" style={{ color: pharmacyTheme.text }}>Search for potential drug interactions</div>
+            <div className="developer-name" style={{ color: pharmacyTheme.text }}>Developed by {developerName}</div>
           </div>
 
           <div className="search-inputs-container">
             <div className="input-wrapper" style={{ zIndex: 2 }}>
-              <div className="input-label">First Medication</div>
+              <div className="input-label" style={{ color: pharmacyTheme.text }}>First Medication</div>
               <DrugSearchInput
                 value={selectedDrug1}
                 onSelect={setSelectedDrug1}
@@ -288,7 +307,7 @@ const DrugInteractionChecker = () => {
             </div>
 
             <div className="input-wrapper" style={{ zIndex: 1 }}>
-              <div className="input-label">Second Medication</div>
+              <div className="input-label" style={{ color: pharmacyTheme.text }}>Second Medication</div>
               <DrugSearchInput
                 value={selectedDrug2}
                 onSelect={setSelectedDrug2}
@@ -305,23 +324,23 @@ const DrugInteractionChecker = () => {
           <div className="results-container">
             {interactions.length > 0 ? (
               <div className="results-section">
-                <div className="results-section-title">Known Interactions</div>
+                <div className="results-section-title" style={{ color: pharmacyTheme.primary }}>Known Interactions</div>
                 {interactions.map((interaction, index) => (
                   <InteractionCard key={index} interaction={interaction} />
                 ))}
               </div>
             ) : selectedDrug1 && selectedDrug2 ? (
-              <div className="message-card">
+              <div className="message-card" style={{ backgroundColor: pharmacyTheme.cardBackground, boxShadow: pharmacyTheme.cardShadow }}>
                 <div className="no-interaction-icon">
-                  <div className="icon-text">✓</div>
+                  <div className="icon-text" style={{ color: pharmacyTheme.success }}>✓</div>
                 </div>
-                <div className="message-title">No Direct Interactions Found</div>
-                <div className="message-text">
+                <div className="message-title" style={{ color: pharmacyTheme.text }}>No Direct Interactions Found</div>
+                <div className="message-text" style={{ color: pharmacyTheme.text }}>
                   No known interactions between {selectedDrug1} and {selectedDrug2}.
                 </div>
                 {suggestions.length > 0 && (
                   <div className="suggestions-section">
-                    <div className="suggestions-title">Related Interactions</div>
+                    <div className="suggestions-title" style={{ color: pharmacyTheme.primary }}>Related Interactions</div>
                     {suggestions.map((suggestion, index) => (
                       <SuggestionCard key={index} suggestion={suggestion} />
                     ))}
@@ -329,9 +348,9 @@ const DrugInteractionChecker = () => {
                 )}
               </div>
             ) : (
-              <div className="message-card">
-                <div className="message-title">Get Started</div>
-                <div className="message-text">
+              <div className="message-card" style={{ backgroundColor: pharmacyTheme.cardBackground, boxShadow: pharmacyTheme.cardShadow }}>
+                <div className="message-title" style={{ color: pharmacyTheme.text }}>Get Started</div>
+                <div className="message-text" style={{ color: pharmacyTheme.text }}>
                   Search and select two medications to check for potential interactions.
                 </div>
               </div>
