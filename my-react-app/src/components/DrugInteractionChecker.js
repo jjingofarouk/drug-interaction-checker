@@ -133,7 +133,6 @@ const DrugInteractionChecker = () => {
 
   return (
     <div className="checker-wrapper" onClick={handleScreenPress}>
-      <Navbars />
       <header className="hero">
         <div className="hero-content">
           <h1>Drug Interaction Checker</h1>
