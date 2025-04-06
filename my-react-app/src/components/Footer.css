@@ -1,13 +1,123 @@
-/* src/styles/Footer.css */
-.footer {
-  width: 100%;
-  box-sizing: border-box;
+/* src/components/Footer.css */
+
+:root {
+  --primary: #2d3a3a;
+  --secondary: #8cc5bf;
+  --accent: #d68c45;
+  --info: #6ab3df;
+  --background: #f8f7f5;
+  --cardBackground: #ffffff;
 }
 
-@media (max-width: 768px) {
-  .footer-container {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+.footer {
+  background-color: var(--primary);
+  color: var(--cardBackground);
+  padding: 2rem 1rem;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.footer-column {
+  flex: 1;
+  min-width: 200px;
+  margin: 1rem 0;
+}
+
+.footer-logo {
+  height: 40px;
+  width: 80px;
+}
+
+.footer-tagline {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: var(--cardBackground);
+}
+
+.footer-heading {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--cardBackground);
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin: 0.5rem 0;
+}
+
+.footer-links a {
+  color: var(--cardBackground);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: var(--secondary);
+}
+
+.footer-address {
+  font-style: normal;
+  color: var(--cardBackground);
+}
+
+.footer-address a {
+  color: var(--cardBackground);
+  text-decoration: none;
+}
+
+.footer-address a:hover {
+  color: var(--info);
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.social-link {
+  color: var(--cardBackground);
+  font-size: 1.2rem;
+  transition: color 0.2s ease;
+}
+
+.social-link:hover {
+  color: var(--info);
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--secondary);
+  margin-top: 2rem;
+  padding-top: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.footer-policies {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  padding: 0;
+}
+
+.footer-policies a {
+  color: var(--cardBackground);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-policies a:hover {
+  color: var(--info);
 }
