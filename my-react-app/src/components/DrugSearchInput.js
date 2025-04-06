@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { pharmacyTheme } from './theme';
+import './styles.css';
 
 const DrugSearchInput = React.memo(({
   value,
@@ -14,9 +14,9 @@ const DrugSearchInput = React.memo(({
   const [searchText, setSearchText] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-
+  
   useEffect(() => setSearchText(value), [value]);
-
+  
   const handleSearch = useCallback((text) => {
     setSearchText(text);
     setShowSuggestions(true);
@@ -30,18 +30,18 @@ const DrugSearchInput = React.memo(({
       setSuggestions([]);
     }
   }, [allDrugOptions]);
-
+  
   const handleSelect = useCallback((drug) => {
     setSearchText(drug);
     onSelect(drug);
     setShowSuggestions(false);
     setSuggestions([]);
   }, [onSelect]);
-
+  
   const isActive = activeInput === inputIndex;
-
+  
   return (
-    <div className="search-container" style={{ zIndex }}>
+    <div className="drug-search-input" style={{ zIndex }}>
       <input
         type="text"
         className={`search-input ${isActive ? 'search-input-active' : ''} ${value ? 'search-input-filled' : ''}`}
@@ -53,31 +53,18 @@ const DrugSearchInput = React.memo(({
           onFocus(inputIndex);
         }}
         onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-        style={{ 
-          backgroundColor: pharmacyTheme.cardBackground, 
-          color: pharmacyTheme.text 
-        }}
       />
       {showSuggestions && suggestions.length > 0 && (
-        <div 
-          className="suggestions-container" 
-          style={{ 
-            backgroundColor: pharmacyTheme.cardBackground, 
-            boxShadow: pharmacyTheme.cardShadow 
-          }}
-        >
-          <div className="suggestions-list">
-            {suggestions.map(drug => (
-              <div
-                key={drug}
-                className="suggestion-item"
-                onClick={() => handleSelect(drug)}
-                style={{ color: pharmacyTheme.text }}
-              >
-                <div className="suggestion-text">{drug}</div>
-              </div>
-            ))}
-          </div>
+        <div className="dropdown">
+          {suggestions.map(drug => (
+            <div
+              key={drug}
+              className="dropdown-item"
+              onClick={() => handleSelect(drug)}
+            >
+              {drug}
+            </div>
+          ))}
         </div>
       )}
     </div>
