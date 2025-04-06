@@ -9,8 +9,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="app-container">
         <Navbars />
+        
+        <main>
         <Routes>
           <Route path="/" element={<DrugInteractionChecker />} />
           <Route path="/checker" element={<DrugInteractionChecker />} />
@@ -21,6 +23,8 @@ function App() {
           <Route path="/resources" element={<div>Resources</div>} />
           <Route path="/contact" element={<div>Contact</div>} />
         </Routes>
+        </main>
+        
         <Footer />
       </div>
     </Router>
