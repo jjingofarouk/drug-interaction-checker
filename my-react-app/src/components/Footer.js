@@ -1,7 +1,7 @@
 // src/components/Footer.js
 import React from 'react';
 import { pharmacyTheme } from './theme'; // Import your existing theme
-import logo from '../assets/images/pharmacy-logo.png'; // Adjust path to your logo
+import logo from './pharmacy-logo.png'; // Adjust path to your logo
 import './Footer.css'; // Assuming you’ll create this CSS file
 
 const Footer = () => {
