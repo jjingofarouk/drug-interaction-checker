@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import logo from './logo.svg';
 import DrugInteractionChecker from './components/DrugInteractionChecker';
+import Navbars from './components/Navbar';
 import Footer from './components/Footer';
 
 
@@ -9,6 +10,7 @@ function App() {
   return (
     <Router>
       <div className="app-container">
+        <Navbars />
         
         <main>
         <Routes>
