@@ -1,52 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import Button from 'react-bootstrap/Button';
 import logo from './pharmacy-logo.png';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
-const Navbars = () => {
+const Navbar = () => {
   const [expanded, setExpanded] = useState(false);
   const [visible, setVisible] = useState(true);
   const [prevScrollY, setPrevScrollY] = useState(0);
   const navbarRef = useRef(null);
-
-  const styles = {
-    navbar: {
-      backgroundColor: '#2d3a3a',
-      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-      transition: 'top 0.3s ease-in-out',
-      position: 'sticky',
-      top: visible ? '0' : '-100px',
-      left: 0,
-      width: '100%',
-      zIndex: 1000,
-      minHeight: '60px',
-      maxHeight: '80px',
-    },
-    navLink: { 
-      color: '#f8f7f5',
-      padding: '0.5rem 1rem',
-    },
-    donateButton: {
-      backgroundColor: '#d68c45',
-      borderColor: '#d68c45',
-      color: '#ffffff',
-      fontWeight: 600,
-      padding: '0.5rem 1rem',
-      transition: 'all 0.2s ease',
-    },
-    brandText: {
-      color: '#f8f7f5',
-      fontSize: '1.2rem',
-      fontWeight: 700,
-      letterSpacing: '1px',
-      marginLeft: '0.5rem',
-      textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)',
-    },
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,102 +48,140 @@ const Navbars = () => {
   }, [expanded]);
 
   return (
-    <Navbar
-      expand="lg"
-      style={styles.navbar}
-      variant="dark"
-      expanded={expanded}
-      onToggle={() => setExpanded(!expanded)}
+    <nav
       ref={navbarRef}
+      style={{
+        backgroundColor: '#2d3a3a',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        transition: 'top 0.3s ease-in-out',
+        position: 'sticky',
+        top: visible ? '0' : '-100px',
+        left: 0,
+        width: '100%',
+        zIndex: 1000,
+        minHeight: '60px',
+        maxHeight: '80px',
+      }}
     >
-      <Container className="d-flex align-items-center py-2">
-        <Navbar.Brand as={NavLink} to="/" style={styles.navLink}>
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '1rem',
+      }}>
+        <NavLink to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
           <img
             src={logo}
             alt="Drug Interaction Checker Logo"
-            height="25"
-            width="50"
-            className="d-inline-block align-top"
+            style={{ height: '25px', width: '50px' }}
           />
-        </Navbar.Brand>
+          <span style={{
+            color: '#f8f7f5',
+            fontSize: '1.2rem',
+            fontWeight: 700,
+            letterSpacing: '1px',
+            marginLeft: '0.5rem',
+            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)',
+            display: window.innerWidth > 991 ? 'inline' : 'none'
+          }}>
+            Drug Checker
+          </span>
+        </NavLink>
 
-        <div className="brand-name d-flex d-lg-none flex-grow-1 justify-content-center">
-          <span style={styles.brandText}>Drug Checker</span>
-        </div>
+        <button
+          onClick={() => setExpanded(!expanded)}
+          style={{
+            display: window.innerWidth > 991 ? 'none' : 'block',
+            marginLeft: 'auto',
+            background: 'none',
+            border: 'none',
+            color: '#f8f7f5',
+            fontSize: '1.5rem',
+            cursor: 'pointer'
+          }}
+        >
+          ☰
+        </button>
 
-        <Navbar.Toggle aria-controls="basic-navbar-nav" className="ms-auto" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link as={NavLink} to="/" style={styles.navLink} className="nav-link-custom">
-              Home
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/checker" style={styles.navLink} className="nav-link-custom">
-              Drug Checker
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/drugs" style={styles.navLink} className="nav-link-custom">
-              Drug Database
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/interactions" style={styles.navLink} className="nav-link-custom">
-              Interactions
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/resources" style={styles.navLink} className="nav-link-custom">
-              Resources
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/faq" style={styles.navLink} className="nav-link-custom">
-              FAQ
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/about" style={styles.navLink} className="nav-link-custom">
-              About
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/contact" style={styles.navLink} className="nav-link-custom">
-              Contact
-            </Nav.Link>
-          </Nav>
-          <Nav className="ms-auto align-items-center">
-            <Button
-              as={NavLink}
-              to="/donate"
-              style={styles.donateButton}
-              className="donate-button-custom ms-2"
+        <div
+          style={{
+            display: expanded || window.innerWidth > 991 ? 'flex' : 'none',
+            flexDirection: window.innerWidth > 991 ? 'row' : 'column',
+            alignItems: 'center',
+            marginLeft: 'auto',
+            backgroundColor: window.innerWidth <= 991 && expanded ? '#2d3a3a' : 'transparent',
+            position: window.innerWidth <= 991 && expanded ? 'absolute' : 'static',
+            top: window.innerWidth <= 991 && expanded ? '60px' : 'auto',
+            left: 0,
+            right: 0,
+            zIndex: 999,
+            padding: window.innerWidth <= 991 && expanded ? '1rem' : '0',
+          }}
+        >
+          {[
+            { to: '/', text: 'Home' },
+            { to: '/checker', text: 'Drug Checker' },
+            { to: '/drugs', text: 'Drug Database' },
+            { to: '/interactions', text: 'Interactions' },
+            { to: '/resources', text: 'Resources' },
+            { to: '/faq', text: 'FAQ' },
+            { to: '/about', text: 'About' },
+            { to: '/contact', text: 'Contact' },
+          ].map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              style={{
+                color: '#f8f7f5',
+                padding: '0.5rem 1rem',
+                textDecoration: 'none',
+              }}
+              className={({ isActive }) => 
+                `${isActive ? 'active' : ''} nav-link`
+              }
+              onClick={() => window.innerWidth <= 991 && setExpanded(false)}
             >
-              Donate Now
-            </Button>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
+              {link.text}
+            </NavLink>
+          ))}
+          
+          <NavLink
+            to="/donate"
+            style={{
+              backgroundColor: '#d68c45',
+              color: '#ffffff',
+              fontWeight: 600,
+              padding: '0.5rem 1rem',
+              textDecoration: 'none',
+              borderRadius: '4px',
+              margin: window.innerWidth <= 991 ? '0.5rem 0' : '0 0 0 0.5rem',
+            }}
+            className="donate-button"
+            onClick={() => window.innerWidth <= 991 && setExpanded(false)}
+          >
+            Donate Now
+          </NavLink>
+        </div>
+      </div>
 
       <style jsx>{`
-        .nav-link-custom:hover {
-          color: #8cc5bf !important;
+        .nav-link:hover {
+          color: #8cc5bf;
           transition: color 0.2s ease;
         }
-        .nav-link-custom.active {
-          color: #ffffff !important;
+        .nav-link.active {
+          color: #ffffff;
           fontWeight: 600;
         }
-        .donate-button-custom {
-          background-color: #d68c45 !important;
-          border-color: #d68c45 !important;
-        }
-        .donate-button-custom:hover {
-          background-color: #b87339 !important;
-          border-color: #b87339 !important;
+        .donate-button:hover {
+          background-color: #b87339;
           transform: scale(1.05);
-        }
-        .brand-name span:hover {
-          color: #8cc5bf !important;
-          transition: color 0.2s ease;
-        }
-        @media (max-width: 991px) {
-          .navbar-collapse {
-            background-color: #2d3a3a;
-            position: relative;
-            z-index: 999;
-          }
+          transition: all 0.2s ease;
         }
       `}</style>
-    </Navbar>
+    </nav>
   );
 };
 
-export default Navbars;
+export default Navbar;
