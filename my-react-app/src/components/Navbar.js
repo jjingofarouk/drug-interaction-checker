@@ -8,7 +8,7 @@ import { pharmacyTheme } from './theme'; // Import theme from your existing code
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Placeholder logo (replace with your actual logo path if available)
-import logo from '../assets/images/pharmacy-logo.png'; // Assuming a placeholder logo
+import logo from './pharmacy-logo.png'; // Assuming a placeholder logo
 
 const Navbars = () => {
   const [expanded, setExpanded] = useState(false);
