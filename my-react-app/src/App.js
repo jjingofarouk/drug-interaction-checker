@@ -1,13 +1,15 @@
-import logo from './logo.svg'; // Keep your existing logo import (optional)
+import logo from './logo.svg'; // Optional, kept from your original
 import DrugInteractionChecker from './components/DrugInteractionChecker';
 import Navbars from './components/Navbar'; // Import the navbar
-import 'bootstrap/dist/css/bootstrap.min.css'; // Required for Bootstrap styling
+import Footer from './components/Footer'; // Import the footer
+import 'bootstrap/dist/css/bootstrap.min.css'; // For navbar styling
 
 function App() {
   return (
     <div className="App">
-      <Navbars /> {/* Add the navbar here */}
-      <DrugInteractionChecker /> {/* Your existing component */}
+      <Navbars /> {/* Navbar at the top */}
+      <DrugInteractionChecker /> {/* Main content */}
+      <Footer /> {/* Footer at the bottom */}
     </div>
   );
 }
