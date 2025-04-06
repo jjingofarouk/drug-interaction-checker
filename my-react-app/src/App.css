@@ -1,36 +1,36 @@
-/* Reset default margins and paddings */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  width: 100vw;
-  height: 100%;
-  overflow-x: hidden; /* Prevents unwanted horizontal scrolling */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  background-color: #f8f9fa; /* Light background for consistency */
-  color: #333; /* Default text color */
-}
-
-/* App Container */
+/* App.css */
 .app-container {
-  width: 100vw;
+  min-height: 100vh; /* Ensures the app takes up full viewport height */
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ensures full height */
-  margin: 0;
-  padding: 0;
 }
 
-/* Main Content Area */
 .main-content {
-  flex: 1; /* Pushes content to take available space */
-  width: 100vw;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+  flex: 1; /* Allows main content to grow and push footer down */
+  padding-top: 80px; /* Matches navbar maxHeight to prevent overlap */
+  padding-bottom: 20px; /* Adds spacing before footer */
+  background-color: #f8f7f5; /* Light background for contrast with navbar */
+}
+
+/* Optional: Basic styling for placeholder pages */
+.main-content > div {
+  padding: 20px;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #2d3a3a;
+}
+
+/* Ensure footer stays at the bottom if content is short */
+footer {
+  background-color: #2d3a3a;
+  color: #f8f7f5;
+  padding: 10px 0;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 60px; /* Adjust for smaller screens if navbar height changes */
+  }
 }
