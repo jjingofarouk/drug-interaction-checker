@@ -21,13 +21,112 @@ const DrugInteractionChecker = () => {
     ...Object.fromEntries(Object.values(customDrugOptions).map(drug => [drug, drug]))
   }), []);
 
-  // Interaction finding functions remain the same as in original code
-  const findDrugBankInteractions = useCallback(/* ... */);
-  const findCustomInteractions = useCallback(/* ... */);
-  const findRelatedInteractions = useCallback(/* ... */);
-  const checkInteractions = useCallback(/* ... */);
+  const findDrugBankInteractions = useCallback((drug1, drug2) => {
+    let foundInteractions = [];
+    const drug1Entries = Object.entries(drugBankOptions)
+      .filter(([_, name]) => name === drug1);
+    const drug2Entries = Object.entries(drugBankOptions)
+      .filter(([_, name]) => name === drug2);
 
-  useEffect(() => checkInteractions(), [checkInteractions]);
+    drug1Entries.forEach(([id]) => {
+      if (drugBankInteractions[id]) {
+        foundInteractions.push(...drugBankInteractions[id].interactions
+          .filter((interaction) => interaction[0].toLowerCase().includes(drug2.toLowerCase()))
+          .map((interaction) => ({
+            source: 'drugbank',
+            drug1,
+            drug2,
+            description: interaction[1],
+            title: interaction[0].replace(/<\/?[^>]+(>|$)/g, ''),
+          })));
+      }
+    });
+
+    drug2Entries.forEach(([id]) => {
+      if (drugBankInteractions[id]) {
+        foundInteractions.push(...drugBankInteractions[id].interactions
+          .filter((interaction) => interaction[0].toLowerCase().includes(drug1.toLowerCase()))
+          .map((interaction) => ({
+            source: 'drugbank',
+            drug1,
+            drug2,
+            description: interaction[1],
+            title: interaction[0].replace(/<\/?[^>]+(>|$)/g, ''),
+          })));
+      }
+    });
+
+    return foundInteractions;
+  }, []);
+
+  const findCustomInteractions = useCallback((drug1, drug2) => {
+    return customInteractions
+      .filter((interaction) =>
+        (interaction.drug.toLowerCase() === drug1.toLowerCase() &&
+          interaction.interacting_drug.toLowerCase() === drug2.toLowerCase()) ||
+        (interaction.drug.toLowerCase() === drug2.toLowerCase() &&
+          interaction.interacting_drug.toLowerCase() === drug1.toLowerCase())
+      )
+      .map((interaction) => ({
+        source: 'custom',
+        drug1: interaction.drug,
+        drug2: interaction.interacting_drug,
+        description: interaction.description,
+        extended_description: interaction.extended_description,
+        title: `${interaction.drug} + ${interaction.interacting_drug}`,
+      }));
+  }, []);
+
+  const findRelatedInteractions = useCallback((drug) => {
+    return customInteractions
+      .filter((interaction) =>
+        interaction.drug.toLowerCase() === drug.toLowerCase() ||
+        interaction.interacting_drug.toLowerCase() === drug.toLowerCase()
+      )
+      .map((interaction) => ({
+        drug1: interaction.drug,
+        drug2: interaction.interacting_drug,
+        description: interaction.description,
+        extended_description: interaction.extended_description,
+      }));
+  }, []);
+
+  const checkInteractions = useCallback(() => {
+    if (!selectedDrug1 && !selectedDrug2) {
+      setInteractions([]);
+      setSuggestions([]);
+      return;
+    }
+
+    let foundInteractions = [];
+    let suggestedInteractions = [];
+
+    if (selectedDrug1 && selectedDrug2) {
+      foundInteractions = [
+        ...findDrugBankInteractions(selectedDrug1, selectedDrug2),
+        ...findCustomInteractions(selectedDrug1, selectedDrug2),
+      ];
+
+      if (foundInteractions.length === 0) {
+        const drug1Related = findRelatedInteractions(selectedDrug1);
+        const drug2Related = findRelatedInteractions(selectedDrug2);
+
+        suggestedInteractions = [...drug1Related, ...drug2Related]
+          .filter((interaction, index, self) =>
+            index === self.findIndex((t) =>
+              t.drug1 === interaction.drug1 && t.drug2 === interaction.drug2
+            )
+          );
+      }
+    }
+
+    setInteractions(foundInteractions);
+    setSuggestions(suggestedInteractions);
+  }, [selectedDrug1, selectedDrug2, findDrugBankInteractions, findCustomInteractions, findRelatedInteractions]);
+
+  useEffect(() => {
+    checkInteractions();
+  }, [checkInteractions]);
 
   const handleInputFocus = useCallback((index) => setActiveInput(index), []);
   const handleScreenPress = useCallback(() => setActiveInput(null), []);
@@ -53,13 +152,31 @@ const DrugInteractionChecker = () => {
               <div className="input-label" style={{ color: pharmacyTheme.text }}>
                 First Medication
               </div>
-              <DrugSearchInput /* props */ />
+              <DrugSearchInput
+                value={selectedDrug1}
+                onSelect={setSelectedDrug1}
+                placeholder="Search medication..."
+                onFocus={handleInputFocus}
+                inputIndex={1}
+                activeInput={activeInput}
+                zIndex={2}
+                allDrugOptions={allDrugOptions}
+              />
             </div>
             <div className="input-wrapper" style={{ zIndex: 1 }}>
               <div className="input-label" style={{ color: pharmacyTheme.text }}>
                 Second Medication
               </div>
-              <DrugSearchInput /* props */ />
+              <DrugSearchInput
+                value={selectedDrug2}
+                onSelect={setSelectedDrug2}
+                placeholder="Search medication..."
+                onFocus={handleInputFocus}
+                inputIndex={2}
+                activeInput={activeInput}
+                zIndex={1}
+                allDrugOptions={allDrugOptions}
+              />
             </div>
           </div>
 
@@ -73,7 +190,38 @@ const DrugInteractionChecker = () => {
                   <InteractionCard key={index} interaction={interaction} />
                 ))}
               </div>
-            ) : /* rest of conditional rendering remains same */}
+            ) : selectedDrug1 && selectedDrug2 ? (
+              <div className="message-card" style={{ backgroundColor: pharmacyTheme.cardBackground, boxShadow: pharmacyTheme.cardShadow }}>
+                <div className="no-interaction-icon">
+                  <div className="icon-text" style={{ color: pharmacyTheme.success }}>✓</div>
+                </div>
+                <div className="message-title" style={{ color: pharmacyTheme.text }}>
+                  No Direct Interactions Found
+                </div>
+                <div className="message-text" style={{ color: pharmacyTheme.text }}>
+                  No known interactions between {selectedDrug1} and {selectedDrug2}.
+                </div>
+                {suggestions.length > 0 && (
+                  <div className="suggestions-section">
+                    <div className="suggestions-title" style={{ color: pharmacyTheme.primary }}>
+                      Related Interactions
+                    </div>
+                    {suggestions.map((suggestion, index) => (
+                      <SuggestionCard key={index} suggestion={suggestion} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="message-card" style={{ backgroundColor: pharmacyTheme.cardBackground, boxShadow: pharmacyTheme.cardShadow }}>
+                <div className="message-title" style={{ color: pharmacyTheme.text }}>
+                  Get Started
+                </div>
+                <div className="message-text" style={{ color: pharmacyTheme.text }}>
+                  Search and select two medications to check for potential interactions.
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
