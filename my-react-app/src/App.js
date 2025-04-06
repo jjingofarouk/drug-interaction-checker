@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbars from './components/Navbar';
+import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import DrugInteractionChecker from './components/DrugInteractionChecker';
 import './App.css'; // Import the CSS file
@@ -9,7 +9,7 @@ function App() {
   return (
     <Router>
       <div className="app-container">
-        <Navbars />
+        <Navbar />
         
         <main className="main-content">
           <Routes>
