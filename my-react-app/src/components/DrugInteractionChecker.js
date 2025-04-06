@@ -17,42 +17,52 @@ const DrugInteractionChecker = () => {
   const [activeInput, setActiveInput] = useState(null);
 
   const allDrugOptions = useMemo(() => ({
-    ...drugBankOptions,
-    ...Object.fromEntries(Object.values(customDrugOptions).map(drug => [drug, drug]))
+    ...(drugBankOptions || {}),
+    ...Object.fromEntries(
+      Object.values(customDrugOptions || {}).map(drug => [drug, drug])
+    ),
   }), []);
 
   const findDrugBankInteractions = useCallback((drug1, drug2) => {
     let foundInteractions = [];
-    const drug1Entries = Object.entries(drugBankOptions)
+    const drug1Entries = Object.entries(drugBankOptions || {})
       .filter(([_, name]) => name === drug1);
-    const drug2Entries = Object.entries(drugBankOptions)
+    const drug2Entries = Object.entries(drugBankOptions || {})
       .filter(([_, name]) => name === drug2);
 
     drug1Entries.forEach(([id]) => {
       if (drugBankInteractions[id]) {
-        foundInteractions.push(...drugBankInteractions[id].interactions
-          .filter((interaction) => interaction[0].toLowerCase().includes(drug2.toLowerCase()))
-          .map((interaction) => ({
-            source: 'drugbank',
-            drug1,
-            drug2,
-            description: interaction[1],
-            title: interaction[0].replace(/<\/?[^>]+(>|$)/g, ''),
-          })));
+        foundInteractions.push(
+          ...(drugBankInteractions[id].interactions || [])
+            .filter((interaction) =>
+              interaction[0].toLowerCase().includes(drug2.toLowerCase())
+            )
+            .map((interaction) => ({
+              source: 'drugbank',
+              drug1,
+              drug2,
+              description: interaction[1],
+              title: interaction[0].replace(/<\/?[^>]+(>|$)/g, ''),
+            }))
+        );
       }
     });
 
     drug2Entries.forEach(([id]) => {
       if (drugBankInteractions[id]) {
-        foundInteractions.push(...drugBankInteractions[id].interactions
-          .filter((interaction) => interaction[0].toLowerCase().includes(drug1.toLowerCase()))
-          .map((interaction) => ({
-            source: 'drugbank',
-            drug1,
-            drug2,
-            description: interaction[1],
-            title: interaction[0].replace(/<\/?[^>]+(>|$)/g, ''),
-          })));
+        foundInteractions.push(
+          ...(drugBankInteractions[id].interactions || [])
+            .filter((interaction) =>
+              interaction[0].toLowerCase().includes(drug1.toLowerCase())
+            )
+            .map((interaction) => ({
+              source: 'drugbank',
+              drug1,
+              drug2,
+              description: interaction[1],
+              title: interaction[0].replace(/<\/?[^>]+(>|$)/g, ''),
+            }))
+        );
       }
     });
 
@@ -60,12 +70,13 @@ const DrugInteractionChecker = () => {
   }, []);
 
   const findCustomInteractions = useCallback((drug1, drug2) => {
-    return customInteractions
-      .filter((interaction) =>
-        (interaction.drug.toLowerCase() === drug1.toLowerCase() &&
-          interaction.interacting_drug.toLowerCase() === drug2.toLowerCase()) ||
-        (interaction.drug.toLowerCase() === drug2.toLowerCase() &&
-          interaction.interacting_drug.toLowerCase() === drug1.toLowerCase())
+    return (customInteractions || [])
+      .filter(
+        (interaction) =>
+          (interaction.drug.toLowerCase() === drug1.toLowerCase() &&
+            interaction.interacting_drug.toLowerCase() === drug2.toLowerCase()) ||
+          (interaction.drug.toLowerCase() === drug2.toLowerCase() &&
+            interaction.interacting_drug.toLowerCase() === drug1.toLowerCase())
       )
       .map((interaction) => ({
         source: 'custom',
@@ -78,10 +89,11 @@ const DrugInteractionChecker = () => {
   }, []);
 
   const findRelatedInteractions = useCallback((drug) => {
-    return customInteractions
-      .filter((interaction) =>
-        interaction.drug.toLowerCase() === drug.toLowerCase() ||
-        interaction.interacting_drug.toLowerCase() === drug.toLowerCase()
+    return (customInteractions || [])
+      .filter(
+        (interaction) =>
+          interaction.drug.toLowerCase() === drug.toLowerCase() ||
+          interaction.interacting_drug.toLowerCase() === drug.toLowerCase()
       )
       .map((interaction) => ({
         drug1: interaction.drug,
@@ -111,18 +123,26 @@ const DrugInteractionChecker = () => {
         const drug1Related = findRelatedInteractions(selectedDrug1);
         const drug2Related = findRelatedInteractions(selectedDrug2);
 
-        suggestedInteractions = [...drug1Related, ...drug2Related]
-          .filter((interaction, index, self) =>
-            index === self.findIndex((t) =>
-              t.drug1 === interaction.drug1 && t.drug2 === interaction.drug2
+        suggestedInteractions = [...drug1Related, ...drug2Related].filter(
+          (interaction, index, self) =>
+            index ===
+            self.findIndex(
+              (t) =>
+                t.drug1 === interaction.drug1 && t.drug2 === interaction.drug2
             )
-          );
+        );
       }
     }
 
     setInteractions(foundInteractions);
     setSuggestions(suggestedInteractions);
-  }, [selectedDrug1, selectedDrug2, findDrugBankInteractions, findCustomInteractions, findRelatedInteractions]);
+  }, [
+    selectedDrug1,
+    selectedDrug2,
+    findDrugBankInteractions,
+    findCustomInteractions,
+    findRelatedInteractions,
+  ]);
 
   useEffect(() => {
     checkInteractions();
@@ -135,13 +155,11 @@ const DrugInteractionChecker = () => {
     <div className="container">
       <div className="hero-section">
         <div className="hero-content">
-          <h1 className="hero-title">Discover Safer Medication Combinations</h1>
+          <h1 className="hero-title">Unlock Safe Medication Insights</h1>
           <p className="hero-subtitle">
-            Instantly check for drug interactions with our trusted, user-friendly tool—empowering you to make informed health decisions.
+            Explore drug interactions effortlessly with our cutting-edge tool—your health, simplified.
           </p>
-          <div className="hero-cta">
-            <span className="hero-cta-text">Start Checking Now</span>
-          </div>
+          <div className="hero-cta">Get Started</div>
         </div>
       </div>
 
@@ -189,13 +207,16 @@ const DrugInteractionChecker = () => {
             ) : selectedDrug1 && selectedDrug2 ? (
               <div className="message-card">
                 <div className="no-interaction-icon">✓</div>
-                <h3 className="message-title">No Interactions Detected</h3>
+                <h3 className="message-title">No Interactions Found</h3>
                 <p className="message-text">
-                  Based on available data, no interactions were found between {selectedDrug1} and {selectedDrug2}.
+                  Good news! No known interactions between {selectedDrug1} and{' '}
+                  {selectedDrug2} based on our data.
                 </p>
                 {suggestions.length > 0 && (
                   <div className="suggestions-section">
-                    <h4 className="suggestions-title">Related Interactions to Consider</h4>
+                    <h4 className="suggestions-title">
+                      Related Interactions to Explore
+                    </h4>
                     {suggestions.map((suggestion, index) => (
                       <SuggestionCard key={index} suggestion={suggestion} />
                     ))}
@@ -204,23 +225,26 @@ const DrugInteractionChecker = () => {
               </div>
             ) : (
               <div className="message-card">
-                <h3 className="message-title">Start Checking Interactions</h3>
+                <h3 className="message-title">Check Your Medications</h3>
                 <p className="message-text">
-                  Enter two medications above to see if they interact. Our database provides reliable, up-to-date information.
+                  Enter two drugs above to uncover potential interactions with
+                  our reliable database.
                 </p>
               </div>
             )}
           </div>
 
           <div className="info-section">
-            <h2 className="info-title">Why Check Drug Interactions?</h2>
+            <h2 className="info-title">Why It Matters</h2>
             <p className="info-text">
-              Drug interactions can alter how medications perform, potentially reducing effectiveness or increasing side effects. Our tool empowers you with clear, reliable insights from a comprehensive database, promoting safer medication use.
+              Understanding drug interactions can prevent unexpected side
+              effects or reduced efficacy. Our tool delivers fast, trustworthy
+              insights to keep you informed.
             </p>
             <ul className="info-list">
-              <li>Powered by trusted pharmaceutical data</li>
-              <li>Fast, clear, and actionable results</li>
-              <li>Supports informed conversations with your healthcare provider</li>
+              <li>Built on comprehensive pharmaceutical data</li>
+              <li>Instant, easy-to-read results</li>
+              <li>Empowers discussions with your doctor</li>
             </ul>
           </div>
         </div>
@@ -255,77 +279,71 @@ const DrugInteractionChecker = () => {
         .container {
           background-color: var(--off-white);
           min-height: 100vh;
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+            Roboto, sans-serif;
+          overflow-x: hidden;
         }
 
         /* Hero Section */
         .hero-section {
-          background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-          color: var(--white);
-          padding: 6rem 2rem;
+          background: linear-gradient(
+            120deg,
+            var(--primary-dark) 0%,
+            var(--primary-color) 100%
+          );
+          padding: 6rem 2rem 4rem;
           text-align: center;
           position: relative;
-          overflow: hidden;
-        }
-
-        .hero-section::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.2), transparent 50%);
-          opacity: 0.3;
+          color: var(--white);
+          box-shadow: inset 0 -10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .hero-content {
-          max-width: 800px;
+          max-width: 900px;
           margin: 0 auto;
-          position: relative;
-          z-index: 1;
         }
 
         .hero-title {
-          font-size: 3.5rem;
-          font-weight: 800;
+          font-size: 3.25rem;
+          font-weight: 700;
           line-height: 1.2;
-          margin-bottom: 1rem;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          animation: fadeInUp 0.6s ease-out;
+          margin-bottom: 1.25rem;
+          animation: slideIn 0.8s ease-out;
         }
 
         .hero-subtitle {
           font-size: 1.5rem;
-          font-weight: 400;
+          font-weight: 300;
           line-height: 1.5;
-          margin-bottom: 2rem;
-          opacity: 0.9;
-          animation: fadeInUp 0.6s ease-out 0.2s both;
+          max-width: 700px;
+          margin: 0 auto 2rem;
+          opacity: 0.95;
+          animation: slideIn 0.8s ease-out 0.2s both;
         }
 
         .hero-cta {
           display: inline-block;
-          padding: 0.75rem 2rem;
+          padding: 1rem 2.5rem;
           background-color: var(--secondary-color);
           color: var(--white);
           font-size: 1.25rem;
           font-weight: 600;
-          border-radius: 50px;
-          text-decoration: none;
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-          animation: fadeInUp 0.6s ease-out 0.4s both;
+          border-radius: 2rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          animation: slideIn 0.8s ease-out 0.4s both;
         }
 
         .hero-cta:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+          background-color: var(--secondary-dark);
+          transform: scale(1.05);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
 
-        @keyframes fadeInUp {
+        @keyframes slideIn {
           from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px);
           }
           to {
             opacity: 1;
@@ -337,39 +355,111 @@ const DrugInteractionChecker = () => {
         .main-container {
           max-width: 1200px;
           margin: 0 auto;
-          padding: 3rem 1rem;
+          padding: 4rem 1rem;
         }
 
         .main-scroll {
           display: flex;
           flex-direction: column;
-          gap: 4rem;
+          gap: 5rem;
         }
 
         /* Search Section */
         .search-section {
-          text-align: center;
+          position: relative;
+          z-index: 10;
         }
 
         .search-inputs-container {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 2rem;
-          max-width: 900px;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: 2.5rem;
+          max-width: 1000px;
           margin: 0 auto;
         }
 
         .input-wrapper {
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
         }
 
         .input-label {
           color: var(--dark);
-          font-size: 1.1rem;
+          font-size: 1.15rem;
           font-weight: 600;
           margin-bottom: 0.75rem;
+          transition: color 0.3s ease;
+        }
+
+        /* DrugSearchInput Styles */
+        :global(.drug-search-input) {
+          position: relative;
+          width: 100%;
+        }
+
+        :global(.drug-search-input input) {
+          width: 100%;
+          padding: 1rem 1.5rem;
+          font-size: 1.1rem;
+          font-family: 'Poppins', sans-serif;
+          color: var(--dark);
+          background-color: var(--white);
+          border: 2px solid var(--light-gray);
+          border-radius: 12px;
+          outline: none;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        :global(.drug-search-input input:focus) {
+          border-color: var(--primary-color);
+          box-shadow: 0 4px 16px rgba(58, 143, 133, 0.2);
+          transform: translateY(-2px);
+        }
+
+        :global(.drug-search-input input::placeholder) {
+          color: var(--medium-gray);
+          opacity: 0.8;
+        }
+
+        :global(.drug-search-input .dropdown) {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background-color: var(--white);
+          border-radius: 12px;
+          border: 1px solid var(--light-gray);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+          max-height: 300px;
+          overflow-y: auto;
+          z-index: 1000;
+          margin-top: 0.5rem;
+          animation: dropdownFade 0.2s ease-out;
+        }
+
+        :global(.drug-search-input .dropdown-item) {
+          padding: 0.75rem 1.5rem;
+          font-size: 1rem;
+          color: var(--dark-gray);
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        :global(.drug-search-input .dropdown-item:hover) {
+          background-color: var(--primary-light);
+          color: var(--primary-dark);
+        }
+
+        @keyframes dropdownFade {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
         /* Results Section */
@@ -379,27 +469,28 @@ const DrugInteractionChecker = () => {
 
         .results-section-title {
           color: var(--primary-dark);
-          font-size: 2rem;
+          font-size: 2.25rem;
           font-weight: 700;
-          margin-bottom: 2rem;
+          margin-bottom: 2.5rem;
           text-align: center;
         }
 
         .message-card {
           background-color: var(--white);
-          border-radius: 12px;
+          border-radius: 16px;
           padding: 3rem;
           text-align: center;
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-          transition: transform 0.3s ease;
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+          transition: all 0.3s ease;
         }
 
         .message-card:hover {
-          transform: translateY(-4px);
+          transform: translateY(-6px);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
 
         .no-interaction-icon {
-          font-size: 3rem;
+          font-size: 3.5rem;
           color: var(--success);
           margin-bottom: 1.5rem;
         }
@@ -413,8 +504,10 @@ const DrugInteractionChecker = () => {
 
         .message-text {
           color: var(--medium-gray);
-          font-size: 1.15rem;
+          font-size: 1.2rem;
           line-height: 1.6;
+          max-width: 600px;
+          margin: 0 auto;
         }
 
         .suggestions-title {
@@ -426,23 +519,23 @@ const DrugInteractionChecker = () => {
 
         /* Info Section */
         .info-section {
-          background: linear-gradient(180deg, var(--white) 0%, var(--off-white) 100%);
-          border-radius: 12px;
+          background-color: var(--white);
+          border-radius: 16px;
           padding: 3rem;
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-          text-align: center;
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
         }
 
         .info-title {
           color: var(--primary-dark);
-          font-size: 2rem;
+          font-size: 2.25rem;
           font-weight: 700;
           margin-bottom: 1.5rem;
+          text-align: center;
         }
 
         .info-text {
           color: var(--medium-gray);
-          font-size: 1.15rem;
+          font-size: 1.2rem;
           line-height: 1.6;
           max-width: 800px;
           margin: 0 auto 2rem;
@@ -452,7 +545,7 @@ const DrugInteractionChecker = () => {
           list-style: none;
           padding: 0;
           display: grid;
-          gap: 1rem;
+          gap: 1.25rem;
           max-width: 600px;
           margin: 0 auto;
         }
@@ -485,10 +578,11 @@ const DrugInteractionChecker = () => {
 
           .search-inputs-container {
             grid-template-columns: 1fr;
+            gap: 2rem;
           }
 
           .hero-section {
-            padding: 4rem 1rem;
+            padding: 4rem 1rem 3rem;
           }
         }
 
@@ -498,8 +592,12 @@ const DrugInteractionChecker = () => {
           }
 
           .hero-cta {
-            padding: 0.5rem 1.5rem;
-            font-size: 1rem;
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
+          }
+
+          .message-card {
+            padding: 2rem;
           }
         }
       `}</style>
