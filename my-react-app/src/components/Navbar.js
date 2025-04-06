@@ -18,13 +18,18 @@ const Navbars = () => {
       backgroundColor: '#2d3a3a',
       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
       transition: 'top 0.3s ease-in-out',
-      position: 'sticky', // Sticky on all devices
-      top: visible ? '0' : '-100px', // Hide/show effect
+      position: 'sticky',
+      top: visible ? '0' : '-100px',
       left: 0,
       width: '100%',
       zIndex: 1000,
+      minHeight: '60px',
+      maxHeight: '80px',
     },
-    navLink: { color: '#f8f7f5' },
+    navLink: { 
+      color: '#f8f7f5',
+      padding: '0.5rem 1rem',
+    },
     donateButton: {
       backgroundColor: '#d68c45',
       borderColor: '#d68c45',
@@ -35,7 +40,7 @@ const Navbars = () => {
     },
     brandText: {
       color: '#f8f7f5',
-      fontSize: '1.2rem', // Smaller for mobile
+      fontSize: '1.2rem',
       fontWeight: 700,
       letterSpacing: '1px',
       marginLeft: '0.5rem',
@@ -43,16 +48,12 @@ const Navbars = () => {
     },
   };
 
-  // Scroll effect for hide/show on all devices
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-
       if (currentScrollY > prevScrollY && currentScrollY > 50) {
-        // Scrolling down past 50px - hide navbar
         setVisible(false);
       } else if (currentScrollY < prevScrollY) {
-        // Scrolling up - show navbar
         setVisible(true);
       }
       setPrevScrollY(currentScrollY);
@@ -95,20 +96,19 @@ const Navbars = () => {
       onToggle={() => setExpanded(!expanded)}
       ref={navbarRef}
     >
-      <Container className="d-flex align-items-center">
+      <Container className="d-flex align-items-center py-2">
         <Navbar.Brand as={NavLink} to="/" style={styles.navLink}>
           <img
             src={logo}
-            alt="Touched Hearts Logo"
+            alt="Drug Interaction Checker Logo"
             height="25"
             width="50"
             className="d-inline-block align-top"
           />
         </Navbar.Brand>
 
-        {/* Brand Name - Visible on mobile only */}
         <div className="brand-name d-flex d-lg-none flex-grow-1 justify-content-center">
-          <span style={styles.brandText}>Touched Hearts</span>
+          <span style={styles.brandText}>Drug Checker</span>
         </div>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="ms-auto" />
@@ -117,29 +117,26 @@ const Navbars = () => {
             <Nav.Link as={NavLink} to="/" style={styles.navLink} className="nav-link-custom">
               Home
             </Nav.Link>
+            <Nav.Link as={NavLink} to="/checker" style={styles.navLink} className="nav-link-custom">
+              Drug Checker
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/drugs" style={styles.navLink} className="nav-link-custom">
+              Drug Database
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/interactions" style={styles.navLink} className="nav-link-custom">
+              Interactions
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/resources" style={styles.navLink} className="nav-link-custom">
+              Resources
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/faq" style={styles.navLink} className="nav-link-custom">
+              FAQ
+            </Nav.Link>
             <Nav.Link as={NavLink} to="/about" style={styles.navLink} className="nav-link-custom">
-              About Us
+              About
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/education" style={styles.navLink} className="nav-link-custom">
-              Education
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/healthcare" style={styles.navLink} className="nav-link-custom">
-              Healthcare
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/disabilities" style={styles.navLink} className="nav-link-custom">
-              Disability Support
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/community" style={styles.navLink} className="nav-link-custom">
-              Community
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/stories" style={styles.navLink} className="nav-link-custom">
-              Stories
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/gallery" style={styles.navLink} className="nav-link-custom">
-              Gallery
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/get-involved" style={styles.navLink} className="nav-link-custom">
-              Get Involved
+            <Nav.Link as={NavLink} to="/contact" style={styles.navLink} className="nav-link-custom">
+              Contact
             </Nav.Link>
           </Nav>
           <Nav className="ms-auto align-items-center">
@@ -162,7 +159,7 @@ const Navbars = () => {
         }
         .nav-link-custom.active {
           color: #ffffff !important;
-          font-weight: 600;
+          fontWeight: 600;
         }
         .donate-button-custom {
           background-color: #d68c45 !important;
@@ -176,6 +173,13 @@ const Navbars = () => {
         .brand-name span:hover {
           color: #8cc5bf !important;
           transition: color 0.2s ease;
+        }
+        @media (max-width: 991px) {
+          .navbar-collapse {
+            background-color: #2d3a3a;
+            position: relative;
+            z-index: 999;
+          }
         }
       `}</style>
     </Navbar>
