@@ -1,16 +1,29 @@
-import logo from './logo.svg'; // Optional, kept from your original
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import logo from './logo.svg';
 import DrugInteractionChecker from './components/DrugInteractionChecker';
-import Navbars from './components/Navbar'; // Import the navbar
-import Footer from './components/Footer'; // Import the footer
-import 'bootstrap/dist/css/bootstrap.min.css'; // For navbar styling
+import Navbars from './components/Navbar';
+import Footer from './components/Footer';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
-    <div className="App">
-      <Navbars /> {/* Navbar at the top */}
-      <DrugInteractionChecker /> {/* Main content */}
-      <Footer /> {/* Footer at the bottom */}
-    </div>
+    <Router>
+      <div className="App">
+        <Navbars />
+        <Routes>
+          <Route path="/" element={<DrugInteractionChecker />} />
+          <Route path="/checker" element={<DrugInteractionChecker />} />
+          {/* Placeholder routes */}
+          <Route path="/about" element={<div>About Page</div>} />
+          <Route path="/drugs" element={<div>Drug Database</div>} />
+          <Route path="/interactions" element={<div>Interactions</div>} />
+          <Route path="/resources" element={<div>Resources</div>} />
+          <Route path="/contact" element={<div>Contact</div>} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
