@@ -6,7 +6,6 @@ import drugBankOptions from './drugOptions.json';
 import drugBankInteractions from './druginteractionsdata.json';
 import customDrugOptions from './DrugOptions2.json';
 import customInteractions from './druginteractionsdata2.json';
-import './styles.css';
 import Navbars from './Navbar';
 
 const DrugInteractionChecker = () => {
