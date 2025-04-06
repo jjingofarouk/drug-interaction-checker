@@ -1,22 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { NavLink } from 'react-router-dom';
+import logo from './pharmacy-logo.png';
 
 const Navbar = () => {
   const [expanded, setExpanded] = useState(false);
   const [visible, setVisible] = useState(true);
   const [prevScrollY, setPrevScrollY] = useState(0);
   const navbarRef = useRef(null);
-
-  // Navigation items
-  const navItems = [
-    { path: '/', label: 'Home' },
-    { path: '/checker', label: 'Drug Checker' },
-    { path: '/drugs', label: 'Drug Database' },
-    { path: '/interactions', label: 'Interactions' },
-    { path: '/resources', label: 'Resources' },
-    { path: '/faq', label: 'FAQ' },
-    { path: '/about', label: 'About' },
-    { path: '/contact', label: 'Contact' }
-  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,67 +48,138 @@ const Navbar = () => {
   }, [expanded]);
 
   return (
-    <nav 
+    <nav
       ref={navbarRef}
-      className={`sticky top-0 z-50 bg-[#2d3a3a] shadow-md transition-all duration-300 w-full min-h-[60px] max-h-[80px] ${visible ? 'translate-y-0' : '-translate-y-full'}`}
+      style={{
+        backgroundColor: '#2d3a3a',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        transition: 'top 0.3s ease-in-out',
+        position: 'sticky',
+        top: visible ? '0' : '-100px',
+        left: 0,
+        width: '100%',
+        zIndex: 1000,
+        minHeight: '60px',
+        maxHeight: '80px',
+      }}
     >
-      <div className="container mx-auto px-4 py-2 flex items-center justify-between">
-        {/* Logo and brand section */}
-        <div className="flex items-center">
-          <a href="/" className="flex items-center text-[#f8f7f5] hover:text-[#8cc5bf] transition-colors duration-200">
-            {/* Placeholder for logo - round icon */}
-            <div className="w-[50px] h-[25px] flex items-center justify-center">
-              <div className="w-6 h-6 rounded-full bg-[#8cc5bf] flex items-center justify-center">
-                <span className="text-xs font-bold text-[#2d3a3a]">Rx</span>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        {/* Mobile brand name */}
-        <div className="flex lg:hidden justify-center flex-grow">
-          <span className="text-[#f8f7f5] text-lg font-bold tracking-wider shadow-sm hover:text-[#8cc5bf] transition-colors duration-200">
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '1rem',
+      }}>
+        <NavLink to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+          <img
+            src={logo}
+            alt="Drug Interaction Checker Logo"
+            style={{ height: '25px', width: '50px' }}
+          />
+          <span style={{
+            color: '#f8f7f5',
+            fontSize: '1.2rem',
+            fontWeight: 700,
+            letterSpacing: '1px',
+            marginLeft: '0.5rem',
+            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)',
+            display: window.innerWidth > 991 ? 'inline' : 'none'
+          }}>
             Drug Checker
           </span>
-        </div>
+        </NavLink>
 
-        {/* Hamburger button for mobile */}
-        <button 
-          className="lg:hidden flex items-center text-[#f8f7f5] focus:outline-none" 
+        <button
           onClick={() => setExpanded(!expanded)}
-          aria-label="Toggle navigation"
+          style={{
+            display: window.innerWidth > 991 ? 'none' : 'block',
+            marginLeft: 'auto',
+            background: 'none',
+            border: 'none',
+            color: '#f8f7f5',
+            fontSize: '1.5rem',
+            cursor: 'pointer'
+          }}
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          ☰
         </button>
 
-        {/* Navigation links and donate button - desktop */}
-        <div className={`lg:flex flex-grow items-center ${expanded ? 'absolute top-full left-0 right-0 bg-[#2d3a3a] shadow-md' : 'hidden'}`}>
-          <div className="lg:flex-grow">
-            <ul className={`lg:flex ${expanded ? 'flex flex-col' : 'hidden'}`}>
-              {navItems.map((item, index) => (
-                <li key={index}>
-                  <a 
-                    href={item.path} 
-                    className="block py-2 px-4 text-[#f8f7f5] hover:text-[#8cc5bf] transition-colors duration-200"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="lg:flex items-center justify-end py-2 lg:py-0">
-            <a 
-              href="/donate" 
-              className="inline-block px-4 py-2 bg-[#d68c45] text-white font-semibold rounded hover:bg-[#b87339] hover:scale-105 transition-all duration-200"
+        <div
+          style={{
+            display: expanded || window.innerWidth > 991 ? 'flex' : 'none',
+            flexDirection: window.innerWidth > 991 ? 'row' : 'column',
+            alignItems: 'center',
+            marginLeft: 'auto',
+            backgroundColor: window.innerWidth <= 991 && expanded ? '#2d3a3a' : 'transparent',
+            position: window.innerWidth <= 991 && expanded ? 'absolute' : 'static',
+            top: window.innerWidth <= 991 && expanded ? '60px' : 'auto',
+            left: 0,
+            right: 0,
+            zIndex: 999,
+            padding: window.innerWidth <= 991 && expanded ? '1rem' : '0',
+          }}
+        >
+          {[
+            { to: '/', text: 'Home' },
+            { to: '/checker', text: 'Drug Checker' },
+            { to: '/drugs', text: 'Drug Database' },
+            { to: '/interactions', text: 'Interactions' },
+            { to: '/resources', text: 'Resources' },
+            { to: '/faq', text: 'FAQ' },
+            { to: '/about', text: 'About' },
+            { to: '/contact', text: 'Contact' },
+          ].map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              style={{
+                color: '#f8f7f5',
+                padding: '0.5rem 1rem',
+                textDecoration: 'none',
+              }}
+              className={({ isActive }) => 
+                `${isActive ? 'active' : ''} nav-link`
+              }
+              onClick={() => window.innerWidth <= 991 && setExpanded(false)}
             >
-              Donate Now
-            </a>
-          </div>
+              {link.text}
+            </NavLink>
+          ))}
+          
+          <NavLink
+            to="/donate"
+            style={{
+              backgroundColor: '#d68c45',
+              color: '#ffffff',
+              fontWeight: 600,
+              padding: '0.5rem 1rem',
+              textDecoration: 'none',
+              borderRadius: '4px',
+              margin: window.innerWidth <= 991 ? '0.5rem 0' : '0 0 0 0.5rem',
+            }}
+            className="donate-button"
+            onClick={() => window.innerWidth <= 991 && setExpanded(false)}
+          >
+            Donate Now
+          </NavLink>
         </div>
       </div>
+
+      <style jsx>{`
+        .nav-link:hover {
+          color: #8cc5bf;
+          transition: color 0.2s ease;
+        }
+        .nav-link.active {
+          color: #ffffff;
+          fontWeight: 600;
+        }
+        .donate-button:hover {
+          background-color: #b87339;
+          transform: scale(1.05);
+          transition: all 0.2s ease;
+        }
+      `}</style>
     </nav>
   );
 };
