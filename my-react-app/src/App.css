@@ -1,36 +1,24 @@
-/* App.css */
 .app-container {
-  min-height: 100vh; /* Ensures the app takes up full viewport height */
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--off-white);
+  color: var(--dark);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .main-content {
-  flex: 1; /* Allows main content to grow and push footer down */
-  padding-top: 80px; /* Matches navbar maxHeight to prevent overlap */
-  padding-bottom: 20px; /* Adds spacing before footer */
-  background-color: #f8f7f5; /* Light background for contrast with navbar */
-}
-
-/* Optional: Basic styling for placeholder pages */
-.main-content > div {
-  padding: 20px;
-  text-align: center;
-  font-size: 1.2rem;
-  color: #2d3a3a;
-}
-
-/* Ensure footer stays at the bottom if content is short */
-footer {
-  background-color: #2d3a3a;
-  color: #f8f7f5;
-  padding: 10px 0;
-  text-align: center;
+  flex: 1;
+  padding: 1rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .main-content {
-    padding-top: 60px; /* Adjust for smaller screens if navbar height changes */
+    padding: 0.75rem;
   }
 }
