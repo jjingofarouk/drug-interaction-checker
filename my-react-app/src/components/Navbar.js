@@ -56,7 +56,7 @@ const Navbar = () => {
       <div className="navbar-container">
         <NavLink to="/" className="navbar-logo">
           <img src={logo} alt="Logo" />
-          <span className="brand-text">Drug Checker</span>
+          <span className="brand-text">MediQ</span>
         </NavLink>
 
         <button
@@ -69,7 +69,7 @@ const Navbar = () => {
         <div className={`navbar-links ${expanded ? 'expanded' : ''}`}>
           {[
             { to: '/', text: 'Home' },
-            { to: '/checker', text: 'Drug Checker' },
+            { to: '/checker', text: 'MediQ' },
             { to: '/drugs', text: 'Drug Database' },
             { to: '/interactions', text: 'Interactions' },
             { to: '/resources', text: 'Resources' },
