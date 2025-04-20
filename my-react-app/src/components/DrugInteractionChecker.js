@@ -10,29 +10,42 @@ import Navbars from './Navbar';
 import './styles.css';
 
 // === AI Explanation Fetcher ===
-const fetchAIExplanation = async (drug1, drug2, description) => {
+const fetchInteractionExplanation = async (interactionText) => {
+  const apiKey = process.env.REACT_APP_OPENROUTER_API_KEY;
+
+  if (!apiKey) {
+    console.error("API key is missing. Make sure it's defined in your .env file.");
+    return;
+  }
+
   try {
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
       headers: {
-        "Authorization": "Bearer YOUR_API_KEY_HERE", // <-- Replace with your key
-        "Content-Type": "application/json"
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://mediq.vercel.app', // Correct for Vercel app
+        'X-Title': 'MediQ Drug Interaction Checker'
       },
       body: JSON.stringify({
-        model: "openai/gpt-3.5-turbo",
+        model: 'openai/gpt-3.5-turbo', // use 'openai/gpt-3.5-turbo' for free tier
         messages: [
           {
-            role: "user",
-            content: `Explain the following drug interaction in simple terms for patients: ${drug1} and ${drug2}. Description: ${description}`
+            role: 'user',
+            content: `Can you explain this drug interaction in simpler terms: "${interactionText}"`,
           }
         ]
       })
     });
 
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
     const data = await response.json();
-    return data.choices?.[0]?.message?.content || null;
-  } catch (err) {
-    console.error("AI Error:", err);
+    return data.choices[0].message.content;
+  } catch (error) {
+    console.error("Failed to fetch interaction explanation:", error);
     return null;
   }
 };
