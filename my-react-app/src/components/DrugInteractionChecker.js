@@ -9,6 +9,34 @@ import customInteractions from './druginteractionsdata2.json';
 import Navbars from './Navbar';
 import './styles.css';
 
+// === AI Explanation Fetcher ===
+const fetchAIExplanation = async (drug1, drug2, description) => {
+  try {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer YOUR_API_KEY_HERE", // <-- Replace with your key
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "openai/gpt-3.5-turbo",
+        messages: [
+          {
+            role: "user",
+            content: `Explain the following drug interaction in simple terms for patients: ${drug1} and ${drug2}. Description: ${description}`
+          }
+        ]
+      })
+    });
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content || null;
+  } catch (err) {
+    console.error("AI Error:", err);
+    return null;
+  }
+};
+
 const DrugInteractionChecker = () => {
   const [selectedDrug1, setSelectedDrug1] = useState('');
   const [selectedDrug2, setSelectedDrug2] = useState('');
@@ -25,18 +53,14 @@ const DrugInteractionChecker = () => {
 
   const findDrugBankInteractions = useCallback((drug1, drug2) => {
     let foundInteractions = [];
-    const drug1Entries = Object.entries(drugBankOptions || {})
-      .filter(([_, name]) => name === drug1);
-    const drug2Entries = Object.entries(drugBankOptions || {})
-      .filter(([_, name]) => name === drug2);
+    const drug1Entries = Object.entries(drugBankOptions || {}).filter(([_, name]) => name === drug1);
+    const drug2Entries = Object.entries(drugBankOptions || {}).filter(([_, name]) => name === drug2);
 
     drug1Entries.forEach(([id]) => {
       if (drugBankInteractions[id]) {
         foundInteractions.push(
           ...(drugBankInteractions[id].interactions || [])
-            .filter((interaction) =>
-              interaction[0].toLowerCase().includes(drug2.toLowerCase())
-            )
+            .filter((interaction) => interaction[0].toLowerCase().includes(drug2.toLowerCase()))
             .map((interaction) => ({
               source: 'drugbank',
               drug1,
@@ -52,9 +76,7 @@ const DrugInteractionChecker = () => {
       if (drugBankInteractions[id]) {
         foundInteractions.push(
           ...(drugBankInteractions[id].interactions || [])
-            .filter((interaction) =>
-              interaction[0].toLowerCase().includes(drug1.toLowerCase())
-            )
+            .filter((interaction) => interaction[0].toLowerCase().includes(drug1.toLowerCase()))
             .map((interaction) => ({
               source: 'drugbank',
               drug1,
@@ -103,7 +125,7 @@ const DrugInteractionChecker = () => {
       }));
   }, []);
 
-  const checkInteractions = useCallback(() => {
+  const checkInteractions = useCallback(async () => {
     if (!selectedDrug1 && !selectedDrug2) {
       setInteractions([]);
       setSuggestions([]);
@@ -114,10 +136,26 @@ const DrugInteractionChecker = () => {
     let suggestedInteractions = [];
 
     if (selectedDrug1 && selectedDrug2) {
-      foundInteractions = [
+      const rawInteractions = [
         ...findDrugBankInteractions(selectedDrug1, selectedDrug2),
         ...findCustomInteractions(selectedDrug1, selectedDrug2),
       ];
+
+      const enrichedInteractions = await Promise.all(
+        rawInteractions.map(async (interaction) => {
+          const aiExplanation = await fetchAIExplanation(
+            interaction.drug1,
+            interaction.drug2,
+            interaction.description
+          );
+          return {
+            ...interaction,
+            aiExplanation,
+          };
+        })
+      );
+
+      foundInteractions = enrichedInteractions;
 
       if (foundInteractions.length === 0) {
         const drug1Related = findRelatedInteractions(selectedDrug1);
@@ -209,14 +247,11 @@ const DrugInteractionChecker = () => {
                 <div className="no-interaction-icon">✓</div>
                 <h3 className="message-title">No Interactions Found</h3>
                 <p className="message-text">
-                  Good news! No known interactions between {selectedDrug1} and{' '}
-                  {selectedDrug2} based on our data.
+                  Good news! No known interactions between {selectedDrug1} and {selectedDrug2} based on our data.
                 </p>
                 {suggestions.length > 0 && (
                   <div className="suggestions-section">
-                    <h4 className="suggestions-title">
-                      Related Interactions to Explore
-                    </h4>
+                    <h4 className="suggestions-title">Related Interactions to Explore</h4>
                     {suggestions.map((suggestion, index) => (
                       <SuggestionCard key={index} suggestion={suggestion} />
                     ))}
@@ -227,8 +262,7 @@ const DrugInteractionChecker = () => {
               <div className="message-card">
                 <h3 className="message-title">Check Your Medications</h3>
                 <p className="message-text">
-                  Enter two drugs above to uncover potential interactions with
-                  our reliable database.
+                  Enter two drugs above to uncover potential interactions with our reliable database.
                 </p>
               </div>
             )}
@@ -237,9 +271,7 @@ const DrugInteractionChecker = () => {
           <div className="info-section">
             <h2 className="info-title">Why It Matters</h2>
             <p className="info-text">
-              Understanding drug interactions can prevent unexpected side
-              effects or reduced efficacy. Our tool delivers fast, trustworthy
-              insights to keep you informed.
+              Understanding drug interactions can prevent unexpected side effects or reduced efficacy. Our tool delivers fast, trustworthy insights to keep you informed.
             </p>
             <ul className="info-list">
               <li>Built on comprehensive pharmaceutical data</li>
