@@ -156,11 +156,9 @@ const DrugInteractionChecker = () => {
 
       const enrichedInteractions = await Promise.all(
         rawInteractions.map(async (interaction) => {
-          const aiExplanation = await fetchAIExplanation(
-            interaction.drug1,
-            interaction.drug2,
-            interaction.description
-          );
+          const aiExplanation = await fetchInteractionExplanation(
+  `${interaction.drug1} and ${interaction.drug2}: ${interaction.description}`
+);
           return {
             ...interaction,
             aiExplanation,
