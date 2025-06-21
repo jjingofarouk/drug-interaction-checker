@@ -21,6 +21,16 @@
   display: flex;
   align-items: center;
   text-decoration: none;
+  gap: 0.75rem;
+}
+
+.navbar-logo img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  object-fit: cover;
+  background-color: var(--white);
 }
 
 .brand-text {
