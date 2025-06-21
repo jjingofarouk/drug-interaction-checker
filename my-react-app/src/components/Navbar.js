@@ -1,102 +1,90 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
-import logo from './pharmacy-logo.png';
+import { Menu, X, Info, MessageCircle, Heart } from 'lucide-react';
 import './Navbar.css';
 
 const Navbar = () => {
-  const [expanded, setExpanded] = useState(false);
-  const [visible, setVisible] = useState(true);
-  const [prevScrollY, setPrevScrollY] = useState(0);
-  const navbarRef = useRef(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > prevScrollY && currentScrollY > 50) {
-        setVisible(false);
-      } else {
-        setVisible(true);
-      }
-      setPrevScrollY(currentScrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [prevScrollY]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const sidebarRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (navbarRef.current && !navbarRef.current.contains(event.target) && expanded) {
-        setExpanded(false);
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target) && sidebarOpen) {
+        setSidebarOpen(false);
       }
     };
 
     const handleKeyDown = (event) => {
-      if (event.key === 'Escape' && expanded) {
-        setExpanded(false);
+      if (event.key === 'Escape' && sidebarOpen) {
+        setSidebarOpen(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
     document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [expanded]);
+  }, [sidebarOpen]);
+
+  const menuItems = [
+    { to: '/about', text: 'About Us', icon: Info },
+    { to: '/contact', text: 'Contact', icon: MessageCircle },
+    { to: '/support', text: 'Support This Project', icon: Heart },
+  ];
 
   return (
-    <nav
-      ref={navbarRef}
-      className={`navbar ${visible ? 'visible' : 'hidden'}`}
-    >
-      <div className="navbar-container">
-        <NavLink to="/" className="navbar-logo">
-          <img src={logo} alt="Logo" />
-          <span className="brand-text">MediQ</span>
-        </NavLink>
-
-        <button
-          className="navbar-toggle"
-          onClick={() => setExpanded(!expanded)}
-        >
-          ☰
-        </button>
-
-        <div className={`navbar-links ${expanded ? 'expanded' : ''}`}>
-          {[
-            { to: '/', text: 'Home' },
-            { to: '/checker', text: 'MediQ' },
-            { to: '/drugs', text: 'Drug Database' },
-            { to: '/interactions', text: 'Interactions' },
-            { to: '/resources', text: 'Resources' },
-            { to: '/faq', text: 'FAQ' },
-            { to: '/about', text: 'About' },
-            { to: '/contact', text: 'Contact' },
-          ].map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-              onClick={() => setExpanded(false)}
-            >
-              {link.text}
-            </NavLink>
-          ))}
-
-          <NavLink
-            to="/donate"
-            className="donate-button"
-            onClick={() => setExpanded(false)}
-          >
-            Donate Now
+    <>
+      <nav className="navbar">
+        <div className="navbar-container">
+          <NavLink to="/" className="navbar-logo">
+            <span className="brand-text">MediQ</span>
           </NavLink>
+
+          <button
+            className="navbar-toggle"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-label="Toggle menu"
+          >
+            <Menu size={24} />
+          </button>
+        </div>
+      </nav>
+
+      {/* Sidebar */}
+      <div className={`sidebar-overlay ${sidebarOpen ? 'open' : ''}`}>
+        <div ref={sidebarRef} className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+          <button
+            className="sidebar-close"
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close menu"
+          >
+            <X size={24} />
+          </button>
+
+          <div className="sidebar-content">
+            <nav className="sidebar-nav">
+              {menuItems.map((item) => {
+                const IconComponent = item.icon;
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <IconComponent size={20} />
+                    <span>{item.text}</span>
+                  </NavLink>
+                );
+              })}
+            </nav>
+          </div>
         </div>
       </div>
-    </nav>
+    </>
   );
 };
 
