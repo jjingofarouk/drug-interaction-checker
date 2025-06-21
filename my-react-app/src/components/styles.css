@@ -7,10 +7,7 @@
 
 /* Global Variables */
 :root {
-  --black: #1a1a1a;
-  --dark-gray: #333333;
-  --medium-gray: #666666;
-  --light-gray: #cccccc;
+  --black: #000000;
   --white: #ffffff;
 }
 
@@ -26,15 +23,13 @@
 
 /* Hero Section */
 .hero-section {
-  background-color: var(--dark-gray);
-  padding: 2rem 0;
+  background-color: var(--black);
   text-align: center;
   width: 100vw;
 }
 
 .hero-content {
   width: 100%;
-  padding: 0 1rem;
 }
 
 .hero-title {
@@ -45,7 +40,6 @@
 /* Main Container */
 .main-container {
   width: 100vw;
-  padding: 1rem;
 }
 
 .search-section {
@@ -56,7 +50,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1rem;
-  padding: 0 1rem;
 }
 
 .input-wrapper {
@@ -77,21 +70,20 @@
 
 .drug-search-input input {
   width: 100%;
-  padding: 0.75rem;
   font-size: 1rem;
   color: var(--black);
   background-color: var(--white);
-  border: 1px solid var(--light-gray);
+  border: 1px solid var(--white);
   border-radius: 4px;
   outline: none;
 }
 
 .drug-search-input input:focus {
-  border-color: var(--medium-gray);
+  border-color: var(--white);
 }
 
 .drug-search-input input::placeholder {
-  color: var(--medium-gray);
+  color: var(--black);
 }
 
 .drug-search-input .dropdown {
@@ -100,7 +92,7 @@
   left: 0;
   right: 0;
   background-color: var(--white);
-  border: 1px solid var(--light-gray);
+  border: 1px solid var(--white);
   border-radius: 4px;
   max-height: 200px;
   overflow-y: auto;
@@ -109,19 +101,18 @@
 }
 
 .drug-search-input .dropdown-item {
-  padding: 0.5rem 1rem;
   font-size: 1rem;
   color: var(--black);
   cursor: pointer;
 }
 
 .drug-search-input .dropdown-item:hover {
-  background-color: var(--light-gray);
+  background-color: var(--black);
+  color: var(--white);
 }
 
 /* Results Section */
 .results-container {
-  padding: 1rem 0;
 }
 
 .results-section-title {
@@ -132,9 +123,9 @@
 }
 
 .message-card {
-  background-color: var(--dark-gray);
+  background-color: var(--black);
+  border: 1px solid var(--white);
   border-radius: 4px;
-  padding: 1.5rem;
   text-align: center;
 }
 
@@ -152,7 +143,7 @@
 
 .message-text {
   font-size: 1rem;
-  color: var(--light-gray);
+  color: var(--white);
 }
 
 .suggestions-title {
@@ -175,9 +166,5 @@
 @media (max-width: 480px) {
   .hero-title {
     font-size: 1.25rem;
-  }
-
-  .message-card {
-    padding: 1rem;
   }
 }
