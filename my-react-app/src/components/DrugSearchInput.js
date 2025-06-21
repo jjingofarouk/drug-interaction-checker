@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import './styles.css';
+import './DrugSearchInput.css';
 
 const DrugSearchInput = React.memo(({
   value,
