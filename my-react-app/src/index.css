@@ -1,25 +1,7 @@
 :root {
-  /* Primary color palette - Warm Teal/Sage */
-  --primary-color: #3a8f85;
-  --primary-dark: #2c7269;
-  --primary-light: #8cc5bf;
-  --secondary-color: #d68c45;
-  --secondary-dark: #b87339;
-  --secondary-light: #e9b384;
-
-  /* Neutral colors - Warmer and more organic */
-  --dark: #2d3a3a;
-  --dark-gray: #4d5c5c;
-  --medium-gray: #7e8c8c;
-  --light-gray: #d2d8d8;
-  --off-white: #f8f7f5;
+  /* Pure Black and White Color Palette */
+  --black: #000000;
   --white: #ffffff;
-
-  /* Accent colors - More earthy and harmonious */
-  --success: #739e73;
-  --warning: #e6b86a;
-  --error: #c17b7b;
-  --info: #6a91ab;
 }
 
 /* CSS Reset + Global Styling */
@@ -30,17 +12,18 @@
 }
 
 body {
-  background-color: var(--off-white);
-  color: var(--dark);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--black);
+  color: var(--white);
+  font-family: 'Arial', sans-serif;
   line-height: 1.6;
 }
 
 a {
-  color: var(--primary-color);
+  color: var(--white);
   text-decoration: none;
 }
 
 a:hover {
-  color: var(--primary-dark);
+  color: var(--black);
+  background-color: var(--white);
 }
