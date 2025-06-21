@@ -4,7 +4,6 @@ import InteractionCard from './InteractionCard';
 import SuggestionCard from './SuggestionCard';
 import customDrugOptions from './DrugOptions2.json';
 import customInteractions from './druginteractionsdata2.json';
-import Navbars from './Navbar';
 import './styles.css';
 
 const DrugInteractionChecker = () => {
@@ -21,22 +20,22 @@ const DrugInteractionChecker = () => {
   ), []);
 
   const findCustomInteractions = useCallback((drug1, drug2) => {
-    return (customInteractions || [])
-      .filter(
+    const interaction = (customInteractions || [])
+      .find(
         (interaction) =>
           (interaction.drug.toLowerCase() === drug1.toLowerCase() &&
             interaction.interacting_drug.toLowerCase() === drug2.toLowerCase()) ||
           (interaction.drug.toLowerCase() === drug2.toLowerCase() &&
             interaction.interacting_drug.toLowerCase() === drug1.toLowerCase())
-      )
-      .map((interaction) => ({
-        source: 'custom',
-        drug1: interaction.drug,
-        drug2: interaction.interacting_drug,
-        description: interaction.description,
-        extended_description: interaction.extended_description,
-        title: `${interaction.drug} + ${interaction.interacting_drug}`,
-      }));
+      );
+    return interaction ? [{
+      source: 'custom',
+      drug1: interaction.drug,
+      drug2: interaction.interacting_drug,
+      description: interaction.description,
+      extended_description: interaction.extended_description,
+      title: `${interaction.drug} + ${interaction.interacting_drug}`,
+    }] : [];
   }, []);
 
   const findRelatedInteractions = useCallback((drug) => {
@@ -51,7 +50,8 @@ const DrugInteractionChecker = () => {
         drug2: interaction.interacting_drug,
         description: interaction.description,
         extended_description: interaction.extended_description,
-      }));
+      }))
+      .slice(0, 1); // Limit to one suggestion
   }, []);
 
   const checkInteractions = useCallback(() => {
@@ -99,95 +99,75 @@ const DrugInteractionChecker = () => {
   const handleScreenPress = useCallback(() => setActiveInput(null), []);
 
   return (
-    <div className="container">
+    <div className="container" onClick={handleScreenPress}>
       <div className="hero-section">
         <div className="hero-content">
-          <h1 className="hero-title">Unlock Safe Medication Insights</h1>
-          <p className="hero-subtitle">
-            Explore drug interactions effortlessly with our cutting-edge tool—your health, simplified.
-          </p>
-          <div className="hero-cta">Get Started</div>
+          <h1 className="hero-title">Drug Interaction Checker</h1>
         </div>
       </div>
-
-      <div className="main-container" onClick={handleScreenPress}>
-        <div className="main-scroll">
-          <div className="search-section">
-            <div className="search-inputs-container">
-              <div className="input-wrapper">
-                <label className="input-label">Medication 1</label>
-                <DrugSearchInput
-                  value={selectedDrug1}
-                  onSelect={setSelectedDrug1}
-                  placeholder="Enter first medication..."
-                  onFocus={handleInputFocus}
-                  inputIndex={1}
-                  activeInput={activeInput}
-                  zIndex={2}
-                  allDrugOptions={allDrugOptions}
-                />
-              </div>
-              <div className="input-wrapper">
-                <label className="input-label">Medication 2</label>
-                <DrugSearchInput
-                  value={selectedDrug2}
-                  onSelect={setSelectedDrug2}
-                  placeholder="Enter second medication..."
-                  onFocus={handleInputFocus}
-                  inputIndex={2}
-                  activeInput={activeInput}
-                  zIndex={1}
-                  allDrugOptions={allDrugOptions}
-                />
-              </div>
+      <div className="main-container">
+        <div className="search-section">
+          <div className="search-inputs-container">
+            <div className="input-wrapper">
+              <label className="input-label">Medication 1</label>
+              <DrugSearchInput
+                value={selectedDrug1}
+                onSelect={setSelectedDrug1}
+                placeholder="Enter first medication..."
+                onFocus={handleInputFocus}
+                inputIndex={1}
+                activeInput={activeInput}
+                zIndex={2}
+                allDrugOptions={allDrugOptions}
+              />
+            </div>
+            <div className="input-wrapper">
+              <label className="input-label">Medication 2</label>
+              <DrugSearchInput
+                value={selectedDrug2}
+                onSelect={setSelectedDrug2}
+                placeholder="Enter second medication..."
+                onFocus={handleInputFocus}
+                inputIndex={2}
+                activeInput={activeInput}
+                zIndex={1}
+                allDrugOptions={allDrugOptions}
+              />
             </div>
           </div>
-
-          <div className="results-container">
-            {interactions.length > 0 ? (
-              <div className="results-section">
-                <h2 className="results-section-title">Detected Interactions</h2>
-                {interactions.map((interaction, index) => (
-                  <InteractionCard key={index} interaction={interaction} />
-                ))}
-              </div>
-            ) : selectedDrug1 && selectedDrug2 ? (
-              <div className="message-card">
-                <div className="no-interaction-icon">✓</div>
-                <h3 className="message-title">No Interactions Found</h3>
-                <p className="message-text">
-                  Good news! No known interactions between {selectedDrug1} and {selectedDrug2} based on our data.
-                </p>
-                {suggestions.length > 0 && (
-                  <div className="suggestions-section">
-                    <h4 className="suggestions-title">Related Interactions to Explore</h4>
-                    {suggestions.map((suggestion, index) => (
-                      <SuggestionCard key={index} suggestion={suggestion} />
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="message-card">
-                <h3 className="message-title">Check Your Medications</h3>
-                <p className="message-text">
-                  Enter two drugs above to uncover potential interactions with our reliable database.
-                </p>
-              </div>
-            )}
-          </div>
-
-          <div className="info-section">
-            <h2 className="info-title">Why It Matters</h2>
-            <p className="info-text">
-              Understanding drug interactions can prevent unexpected side effects or reduced efficacy. Our tool delivers fast, trustworthy insights to keep you informed.
-            </p>
-            <ul className="info-list">
-              <li>Built on comprehensive pharmaceutical data</li>
-              <li>Instant, easy-to-read results</li>
-              <li>Empowers discussions with your doctor</li>
-            </ul>
-          </div>
+        </div>
+        <div className="results-container">
+          {interactions.length > 0 ? (
+            <div className="results-section">
+              <h2 className="results-section-title">Detected Interaction</h2>
+              {interactions.map((interaction, index) => (
+                <InteractionCard key={index} interaction={interaction} />
+              ))}
+            </div>
+          ) : selectedDrug1 && selectedDrug2 ? (
+            <div className="message-card">
+              <div className="no-interaction-icon">✓</div>
+              <h3 className="message-title">No Interaction Found</h3>
+              <p className="message-text">
+                No known interactions between {selectedDrug1} and {selectedDrug2}.
+              </p>
+              {suggestions.length > 0 && (
+                <div className="suggestions-section">
+                  <h4 className="suggestions-title">Related Interaction</h4>
+                  {suggestions.map((suggestion, index) => (
+                    <SuggestionCard key={index} suggestion={suggestion} />
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="message-card">
+              <h3 className="message-title">Check Medications</h3>
+              <p className="message-text">
+                Enter two drugs to check for interactions.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
