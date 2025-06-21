@@ -2,53 +2,10 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import DrugSearchInput from './DrugSearchInput';
 import InteractionCard from './InteractionCard';
 import SuggestionCard from './SuggestionCard';
-import drugBankOptions from './drugOptions.json';
-import drugBankInteractions from './druginteractionsdata.json';
 import customDrugOptions from './DrugOptions2.json';
 import customInteractions from './druginteractionsdata2.json';
 import Navbars from './Navbar';
 import './styles.css';
-
-// === AI Explanation Fetcher ===
-const fetchInteractionExplanation = async (interactionText) => {
-  const apiKey = process.env.REACT_APP_OPENROUTER_API_KEY;
-
-  if (!apiKey) {
-    console.error("API key is missing. Make sure it's defined in your .env file.");
-    return;
-  }
-
-  try {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://mediq.vercel.app', // Correct for Vercel app
-        'X-Title': 'MediQ Drug Interaction Checker'
-      },
-      body: JSON.stringify({
-        model: 'openai/gpt-3.5-turbo', // use 'openai/gpt-3.5-turbo' for free tier
-        messages: [
-          {
-            role: 'user',
-            content: `Can you explain this drug interaction in simpler terms: "${interactionText}"`,
-          }
-        ]
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data.choices[0].message.content;
-  } catch (error) {
-    console.error("Failed to fetch interaction explanation:", error);
-    return null;
-  }
-};
 
 const DrugInteractionChecker = () => {
   const [selectedDrug1, setSelectedDrug1] = useState('');
@@ -57,52 +14,11 @@ const DrugInteractionChecker = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [activeInput, setActiveInput] = useState(null);
 
-  const allDrugOptions = useMemo(() => ({
-    ...(drugBankOptions || {}),
-    ...Object.fromEntries(
+  const allDrugOptions = useMemo(() => (
+    Object.fromEntries(
       Object.values(customDrugOptions || {}).map(drug => [drug, drug])
-    ),
-  }), []);
-
-  const findDrugBankInteractions = useCallback((drug1, drug2) => {
-    let foundInteractions = [];
-    const drug1Entries = Object.entries(drugBankOptions || {}).filter(([_, name]) => name === drug1);
-    const drug2Entries = Object.entries(drugBankOptions || {}).filter(([_, name]) => name === drug2);
-
-    drug1Entries.forEach(([id]) => {
-      if (drugBankInteractions[id]) {
-        foundInteractions.push(
-          ...(drugBankInteractions[id].interactions || [])
-            .filter((interaction) => interaction[0].toLowerCase().includes(drug2.toLowerCase()))
-            .map((interaction) => ({
-              source: 'drugbank',
-              drug1,
-              drug2,
-              description: interaction[1],
-              title: interaction[0].replace(/<\/?[^>]+(>|$)/g, ''),
-            }))
-        );
-      }
-    });
-
-    drug2Entries.forEach(([id]) => {
-      if (drugBankInteractions[id]) {
-        foundInteractions.push(
-          ...(drugBankInteractions[id].interactions || [])
-            .filter((interaction) => interaction[0].toLowerCase().includes(drug1.toLowerCase()))
-            .map((interaction) => ({
-              source: 'drugbank',
-              drug1,
-              drug2,
-              description: interaction[1],
-              title: interaction[0].replace(/<\/?[^>]+(>|$)/g, ''),
-            }))
-        );
-      }
-    });
-
-    return foundInteractions;
-  }, []);
+    )
+  ), []);
 
   const findCustomInteractions = useCallback((drug1, drug2) => {
     return (customInteractions || [])
@@ -138,7 +54,7 @@ const DrugInteractionChecker = () => {
       }));
   }, []);
 
-  const checkInteractions = useCallback(async () => {
+  const checkInteractions = useCallback(() => {
     if (!selectedDrug1 && !selectedDrug2) {
       setInteractions([]);
       setSuggestions([]);
@@ -149,24 +65,7 @@ const DrugInteractionChecker = () => {
     let suggestedInteractions = [];
 
     if (selectedDrug1 && selectedDrug2) {
-      const rawInteractions = [
-        ...findDrugBankInteractions(selectedDrug1, selectedDrug2),
-        ...findCustomInteractions(selectedDrug1, selectedDrug2),
-      ];
-
-      const enrichedInteractions = await Promise.all(
-        rawInteractions.map(async (interaction) => {
-          const aiExplanation = await fetchInteractionExplanation(
-  `${interaction.drug1} and ${interaction.drug2}: ${interaction.description}`
-);
-          return {
-            ...interaction,
-            aiExplanation,
-          };
-        })
-      );
-
-      foundInteractions = enrichedInteractions;
+      foundInteractions = findCustomInteractions(selectedDrug1, selectedDrug2);
 
       if (foundInteractions.length === 0) {
         const drug1Related = findRelatedInteractions(selectedDrug1);
@@ -188,7 +87,6 @@ const DrugInteractionChecker = () => {
   }, [
     selectedDrug1,
     selectedDrug2,
-    findDrugBankInteractions,
     findCustomInteractions,
     findRelatedInteractions,
   ]);
