@@ -17,31 +17,35 @@ const SuggestionCard = React.memo(({ suggestion }) => {
       <style jsx>{`
         .suggestion-card {
           background-color: var(--white);
-          border-radius: 12px;
-          padding: 1.5rem;
+          border: 2px solid var(--black);
+          border-radius: 0;
           margin-bottom: 1rem;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-          border-left: 3px solid var(--secondary-color);
           position: relative;
           overflow: hidden;
         }
         
         .suggestion-card:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+          background-color: var(--black);
+          color: var(--white);
         }
         
-        .suggestion-card::after {
-          content: "";
-          position: absolute;
-          top: 0;
-          right: 0;
-          width: 60px;
-          height: 60px;
-          background: linear-gradient(135deg, var(--primary-light) 0%, transparent 70%);
-          opacity: 0.2;
-          border-radius: 0 0 0 100%;
+        .suggestion-card:hover .drug-pill {
+          background-color: var(--white);
+          color: var(--black);
+        }
+        
+        .suggestion-card:hover .plus-icon {
+          color: var(--white);
+        }
+        
+        .suggestion-card:hover .interaction-text {
+          color: var(--white);
+        }
+        
+        .suggestion-card:hover .extended-description {
+          color: var(--white);
+          border-top: 1px solid var(--white);
         }
         
         .drug-combination {
@@ -52,25 +56,25 @@ const SuggestionCard = React.memo(({ suggestion }) => {
         }
         
         .drug-pill {
-          background-color: var(--primary-light);
-          color: var(--primary-dark);
-          padding: 0.35rem 0.8rem;
-          border-radius: 20px;
+          background-color: var(--black);
+          color: var(--white);
+          border-radius: 0;
           font-size: 0.95rem;
           font-weight: 600;
           margin-right: 0.5rem;
           margin-bottom: 0.5rem;
+          border: 1px solid var(--black);
         }
         
         .plus-icon {
-          color: var(--secondary-color);
+          color: var(--black);
           font-size: 1.2rem;
           font-weight: 700;
           margin: 0 0.5rem;
         }
         
         .interaction-text {
-          color: var(--dark-gray);
+          color: var(--black);
           font-size: 1.05rem;
           line-height: 1.6;
           margin-bottom: 1rem;
@@ -78,19 +82,14 @@ const SuggestionCard = React.memo(({ suggestion }) => {
         }
         
         .extended-description {
-          color: var(--medium-gray);
+          color: var(--black);
           font-size: 0.95rem;
           line-height: 1.6;
-          padding-top: 1rem;
-          border-top: 1px solid var(--light-gray);
+          border-top: 1px solid var(--black);
           font-weight: 300;
         }
         
         @media (max-width: 768px) {
-          .suggestion-card {
-            padding: 1.25rem;
-          }
-          
           .interaction-text {
             font-size: 1rem;
           }
@@ -104,7 +103,6 @@ const SuggestionCard = React.memo(({ suggestion }) => {
           
           .drug-pill {
             font-size: 0.85rem;
-            padding: 0.3rem 0.7rem;
           }
         }
       `}</style>
