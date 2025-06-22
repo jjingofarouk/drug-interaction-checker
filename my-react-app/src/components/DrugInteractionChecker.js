@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { CheckCircle } from 'lucide-react';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
-import { db } from '../firebaseConfig'; // Import Firestore instance
+import { db } from '../firebaseConfig';
 import DrugSearchInput from './DrugSearchInput';
 import InteractionCard from './InteractionCard';
 import SuggestionCard from './SuggestionCard';
@@ -16,8 +16,8 @@ const DrugInteractionChecker = () => {
   const [drugOptions, setDrugOptions] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [singleDrugInteractions, setSingleDrugInteractions] = useState([]);
 
-  // Fetch all drug options from Firestore
   useEffect(() => {
     const fetchDrugOptions = async () => {
       try {
@@ -94,6 +94,35 @@ const DrugInteractionChecker = () => {
     }
   }, [drugOptions]);
 
+  const findSingleDrugInteractions = useCallback(async (drug) => {
+    if (!drug) return [];
+
+    const drugId = Object.keys(drugOptions).find(
+      (key) => drugOptions[key].toLowerCase() === drug.toLowerCase()
+    );
+
+    if (!drugId) return [];
+
+    try {
+      const drugDoc = await getDoc(doc(db, 'drugInteractions', drugId));
+      if (!drugDoc.exists()) return [];
+
+      return drugDoc.data().interactions.map(
+        ({ drug, drugId, description }) => ({
+          source: 'custom',
+          drug1: drugOptions[drugId],
+          drug2: drugOptions[drugId] || drug,
+          description,
+          extended_description: description,
+          title: `${drugOptions[drugId]} + ${drugOptions[drugId] || drug}`,
+        })
+      );
+    } catch (err) {
+      console.error('Error fetching single drug interactions:', err);
+      return [];
+    }
+  }, [drugOptions]);
+
   const findRelatedInteractions = useCallback(async (drug) => {
     const drugId = Object.keys(drugOptions).find(
       (key) => drugOptions[key].toLowerCase() === drug.toLowerCase()
@@ -120,14 +149,17 @@ const DrugInteractionChecker = () => {
   }, [drugOptions]);
 
   const checkInteractions = useCallback(async () => {
+    setInteractions([]);
+    setSuggestions([]);
+    setSingleDrugInteractions([]);
+
     if (!selectedDrug1 && !selectedDrug2) {
-      setInteractions([]);
-      setSuggestions([]);
       return;
     }
 
     let foundInteractions = [];
     let suggestedInteractions = [];
+    let singleInteractions = [];
 
     if (selectedDrug1 && selectedDrug2) {
       foundInteractions = await findCustomInteractions(selectedDrug1, selectedDrug2);
@@ -146,11 +178,16 @@ const DrugInteractionChecker = () => {
             )
         )
         .slice(0, 5);
+    } else if (selectedDrug1) {
+      singleInteractions = await findSingleDrugInteractions(selectedDrug1);
+    } else if (selectedDrug2) {
+      singleInteractions = await findSingleDrugInteractions(selectedDrug2);
     }
 
     setInteractions(foundInteractions);
     setSuggestions(suggestedInteractions);
-  }, [selectedDrug1, selectedDrug2, findCustomInteractions, findRelatedInteractions]);
+    setSingleDrugInteractions(singleInteractions);
+  }, [selectedDrug1, selectedDrug2, findCustomInteractions, findRelatedInteractions, findSingleDrugInteractions]);
 
   useEffect(() => {
     if (Object.keys(drugOptions).length > 0) {
@@ -203,7 +240,14 @@ const DrugInteractionChecker = () => {
           </div>
         </div>
         <div className="results-container">
-          {interactions.length > 0 ? (
+          {singleDrugInteractions.length > 0 ? (
+            <div className="results-section">
+              <h2 className="results-section-title">Drug Interactions for {selectedDrug1 || selectedDrug2}</h2>
+              {singleDrugInteractions.map((interaction, index) => (
+                <InteractionCard key={index} interaction={interaction} />
+              ))}
+            </div>
+          ) : interactions.length > 0 ? (
             <div className="results-section">
               <h2 className="results-section-title">Detected Interaction</h2>
               {interactions.map((interaction, index) => (
@@ -238,7 +282,7 @@ const DrugInteractionChecker = () => {
             <div className="message-card">
               <h3 className="message-title">Check Medications</h3>
               <p className="message-text">
-                Enter two drugs to check for interactions.
+                Enter one or two drugs to check for interactions.
               </p>
             </div>
           )}
