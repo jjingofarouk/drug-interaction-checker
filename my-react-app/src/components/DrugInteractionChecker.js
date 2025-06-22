@@ -18,6 +18,8 @@ const DrugInteractionChecker = () => {
   const [drugOptions, setDrugOptions] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchDrugOptions = async () => {
@@ -153,6 +155,7 @@ const DrugInteractionChecker = () => {
     setInteractions([]);
     setSuggestions([]);
     setSingleDrugInteractions([]);
+    setCurrentPage(1);
 
     let foundInteractions = [];
     let suggestedInteractions = [];
@@ -196,6 +199,21 @@ const DrugInteractionChecker = () => {
   const handleSingleDrugClear = () => {
     setSingleDrug('');
     setSingleDrugInteractions([]);
+    setCurrentPage(1);
+  };
+
+  // Pagination logic
+  const paginatedInteractions = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return singleDrugInteractions.slice(startIndex, startIndex + itemsPerPage);
+  }, [singleDrugInteractions, currentPage]);
+
+  const totalPages = Math.ceil(singleDrugInteractions.length / itemsPerPage);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   if (loading) return <div>Loading...</div>;
@@ -268,9 +286,36 @@ const DrugInteractionChecker = () => {
           {singleDrugInteractions.length > 0 ? (
             <div className="results-section">
               <h2 className="results-section-title">Interactions for {singleDrug}</h2>
-              {singleDrugInteractions.map((interaction, index) => (
+              {paginatedInteractions.map((interaction, index) => (
                 <InteractionCard key={index} interaction={interaction} />
               ))}
+              {totalPages > 1 && (
+                <div className="pagination-container">
+                  <button
+                    className="pagination-button"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                      key={page}
+                      className={`pagination-button ${page === currentPage ? 'active' : ''}`}
+                      onClick={() => handlePageChange(page)}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button
+                    className="pagination-button"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </div>
           ) : singleDrug ? (
             <div className="message-card">
