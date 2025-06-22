@@ -1,9 +1,11 @@
 import React from 'react';
+import { AlertCircle } from 'lucide-react';
 
 const SuggestionCard = React.memo(({ suggestion }) => {
   return (
     <div className="suggestion-card">
       <div className="drug-combination">
+        <AlertCircle className="alert-icon" size={20} />
         <span className="drug-pill">{suggestion.drug1}</span>
         <span className="plus-icon">+</span>
         <span className="drug-pill">{suggestion.drug2}</span>
@@ -15,13 +17,13 @@ const SuggestionCard = React.memo(({ suggestion }) => {
       
       <style jsx>{`
         :root {
-          --primary: #1A3C5A; /* Deep navy for professionalism */
-          --secondary: #F8FAFC; /* Light gray for clean background */
-          --accent: #2563EB; /* Vibrant blue for trust and engagement */
-          --text-primary: #1F2937; /* Dark gray for primary text */
-          --text-secondary: #6B7280; /* Muted gray for secondary text */
-          --white: #FFFFFF; /* Pure white for contrast */
-          --border: #D1D5DB; /* Subtle gray for borders */
+          --primary: #1A3C5A;
+          --secondary: #F8FAFC;
+          --accent: #2563EB;
+          --text-primary: #1F2937;
+          --text-secondary: #6B7280;
+          --white: #FFFFFF;
+          --border: #D1D5DB;
           --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
         }
 
@@ -50,6 +52,11 @@ const SuggestionCard = React.memo(({ suggestion }) => {
           flex-wrap: wrap;
           margin-bottom: 1.25rem;
           gap: 0.75rem;
+        }
+
+        .alert-icon {
+          color: var(--accent);
+          margin-right: 0.5rem;
         }
         
         .drug-pill {
