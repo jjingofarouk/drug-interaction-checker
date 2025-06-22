@@ -13,7 +13,7 @@ import {
   BookOpen,
   Award
 } from 'lucide-react';
-import './about.css';
+import './About.css';
 
 const About = () => {
   const structuredData = [
