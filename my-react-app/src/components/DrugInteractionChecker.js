@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { CheckCircle } from 'lucide-react';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { db } from '../../firebaseConfig'; // Import Firestore instance
 import DrugSearchInput from './DrugSearchInput';
 import InteractionCard from './InteractionCard';
 import SuggestionCard from './SuggestionCard';
-import customDrugOptions from './drugOptions.json';
-import customInteractions from './druginteractionsdata.json';
 import './styles.css';
 
 const DrugInteractionChecker = () => {
@@ -13,65 +13,113 @@ const DrugInteractionChecker = () => {
   const [interactions, setInteractions] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [activeInput, setActiveInput] = useState(null);
+  const [drugOptions, setDrugOptions] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch all drug options from Firestore
+  useEffect(() => {
+    const fetchDrugOptions = async () => {
+      try {
+        setLoading(true);
+        const querySnapshot = await getDocs(collection(db, 'drugOptions'));
+        const options = {};
+        querySnapshot.forEach((doc) => {
+          options[doc.id] = doc.data().name;
+        });
+        setDrugOptions(options);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to load drug options.');
+        setLoading(false);
+        console.error('Error fetching drug options:', err);
+      }
+    };
+    fetchDrugOptions();
+  }, []);
 
   const allDrugOptions = useMemo(() => (
     Object.fromEntries(
-      Object.entries(customDrugOptions || {}).map(([id, name]) => [name, name])
+      Object.entries(drugOptions).map(([id, name]) => [name, name])
     )
-  ), []);
+  ), [drugOptions]);
 
-  const findCustomInteractions = useCallback((drug1, drug2) => {
-    const drug1Id = Object.keys(customDrugOptions).find(
-      key => customDrugOptions[key].toLowerCase() === drug1.toLowerCase()
+  const findCustomInteractions = useCallback(async (drug1, drug2) => {
+    if (!drug1 || !drug2) return [];
+
+    const drug1Id = Object.keys(drugOptions).find(
+      (key) => drugOptions[key].toLowerCase() === drug1.toLowerCase()
     );
-    const drug2Id = Object.keys(customDrugOptions).find(
-      key => customDrugOptions[key].toLowerCase() === drug2.toLowerCase()
+    const drug2Id = Object.keys(drugOptions).find(
+      (key) => drugOptions[key].toLowerCase() === drug2.toLowerCase()
     );
 
     if (!drug1Id || !drug2Id) return [];
 
-    const interactions1 = (customInteractions[drug1Id]?.interactions || []).map(([drug, desc]) => ({
-      source: 'custom',
-      drug1: customDrugOptions[drug1Id],
-      drug2: customDrugOptions[drug.match(/DB\d+/)[0]] || drug.replace(/<[^>]+>/g, ''),
-      description: desc,
-      extended_description: desc,
-      title: `${customDrugOptions[drug1Id]} + ${customDrugOptions[drug.match(/DB\d+/)[0]] || drug.replace(/<[^>]+>/g, '')}`,
-    }));
+    try {
+      const [drug1Doc, drug2Doc] = await Promise.all([
+        getDoc(doc(db, 'drugInteractions', drug1Id)),
+        getDoc(doc(db, 'drugInteractions', drug2Id)),
+      ]);
 
-    const interactions2 = (customInteractions[drug2Id]?.interactions || []).map(([drug, desc]) => ({
-      source: 'custom',
-      drug1: customDrugOptions[drug2Id],
-      drug2: customDrugOptions[drug.match(/DB\d+/)[0]] || drug.replace(/<[^>]+>/g, ''),
-      description: desc,
-      extended_description: desc,
-      title: `${customDrugOptions[drug2Id]} + ${customDrugOptions[drug.match(/DB\d+/)[0]] || drug.replace(/<[^>]+>/g, '')}`,
-    }));
+      const interactions1 = (drug1Doc.exists() ? drug1Doc.data().interactions : []).map(
+        ({ drug, drugId, description }) => ({
+          source: 'custom',
+          drug1: drugOptions[drug1Id],
+          drug2: drugOptions[drugId] || drug,
+          description,
+          extended_description: description,
+          title: `${drugOptions[drug1Id]} + ${drugOptions[drugId] || drug}`,
+        })
+      );
 
-    return [
-      ...interactions1.filter(i => i.drug2.toLowerCase() === drug2.toLowerCase()),
-      ...interactions2.filter(i => i.drug2.toLowerCase() === drug1.toLowerCase()),
-    ];
-  }, []);
+      const interactions2 = (drug2Doc.exists() ? drug2Doc.data().interactions : []).map(
+        ({ drug, drugId, description }) => ({
+          source: 'custom',
+          drug1: drugOptions[drug2Id],
+          drug2: drugOptions[drugId] || drug,
+          description,
+          extended_description: description,
+          title: `${drugOptions[drug2Id]} + ${drugOptions[drugId] || drug}`,
+        })
+      );
 
-  const findRelatedInteractions = useCallback((drug) => {
-    const drugId = Object.keys(customDrugOptions).find(
-      key => customDrugOptions[key].toLowerCase() === drug.toLowerCase()
+      return [
+        ...interactions1.filter((i) => i.drug2.toLowerCase() === drug2.toLowerCase()),
+        ...interactions2.filter((i) => i.drug2.toLowerCase() === drug1.toLowerCase()),
+      ];
+    } catch (err) {
+      console.error('Error fetching interactions:', err);
+      return [];
+    }
+  }, [drugOptions]);
+
+  const findRelatedInteractions = useCallback(async (drug) => {
+    const drugId = Object.keys(drugOptions).find(
+      (key) => drugOptions[key].toLowerCase() === drug.toLowerCase()
     );
 
     if (!drugId) return [];
 
-    return (customInteractions[drugId]?.interactions || [])
-      .map(([interactingDrug, desc]) => ({
-        drug1: customDrugOptions[drugId],
-        drug2: customDrugOptions[interactingDrug.match(/DB\d+/)[0]] || interactingDrug.replace(/<[^>]+>/g, ''),
-        description: desc,
-        extended_description: desc,
-      }))
-      .slice(0, 10);
-  }, []);
+    try {
+      const drugDoc = await getDoc(doc(db, 'drugInteractions', drugId));
+      if (!drugDoc.exists()) return [];
 
-  const checkInteractions = useCallback(() => {
+      return drugDoc.data().interactions
+        .map(({ drug, drugId, description }) => ({
+          drug1: drugOptions[drugId],
+          drug2: drugOptions[drugId] || drug,
+          description,
+          extended_description: description,
+        }))
+        .slice(0, 10);
+    } catch (err) {
+      console.error('Error fetching related interactions:', err);
+      return [];
+    }
+  }, [drugOptions]);
+
+  const checkInteractions = useCallback(async () => {
     if (!selectedDrug1 && !selectedDrug2) {
       setInteractions([]);
       setSuggestions([]);
@@ -82,36 +130,39 @@ const DrugInteractionChecker = () => {
     let suggestedInteractions = [];
 
     if (selectedDrug1 && selectedDrug2) {
-      foundInteractions = findCustomInteractions(selectedDrug1, selectedDrug2);
+      foundInteractions = await findCustomInteractions(selectedDrug1, selectedDrug2);
 
-      const drug1Related = findRelatedInteractions(selectedDrug1);
-      const drug2Related = findRelatedInteractions(selectedDrug2);
+      const [drug1Related, drug2Related] = await Promise.all([
+        findRelatedInteractions(selectedDrug1),
+        findRelatedInteractions(selectedDrug2),
+      ]);
 
-      suggestedInteractions = [...drug1Related, ...drug2Related].filter(
-        (interaction, index, self) =>
-          index ===
-          self.findIndex(
-            (t) =>
-              t.drug1 === interaction.drug1 && t.drug2 === interaction.drug2
-          )
-      ).slice(0, 10);
+      suggestedInteractions = [...drug1Related, ...drug2Related]
+        .filter(
+          (interaction, index, self) =>
+            index ===
+            self.findIndex(
+              (t) => t.drug1 === interaction.drug1 && t.drug2 === interaction.drug2
+            )
+        )
+        .slice(0, 10);
     }
 
     setInteractions(foundInteractions);
     setSuggestions(suggestedInteractions);
-  }, [
-    selectedDrug1,
-    selectedDrug2,
-    findCustomInteractions,
-    findRelatedInteractions,
-  ]);
+  }, [selectedDrug1, selectedDrug2, findCustomInteractions, findRelatedInteractions]);
 
   useEffect(() => {
-    checkInteractions();
-  }, [checkInteractions]);
+    if (Object.keys(drugOptions).length > 0) {
+      checkInteractions();
+    }
+  }, [checkInteractions, drugOptions]);
 
   const handleInputFocus = useCallback((index) => setActiveInput(index), []);
   const handleScreenPress = useCallback(() => setActiveInput(null), []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div className="container" onClick={handleScreenPress}>
