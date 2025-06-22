@@ -3,8 +3,8 @@ import { CheckCircle } from 'lucide-react';
 import DrugSearchInput from './DrugSearchInput';
 import InteractionCard from './InteractionCard';
 import SuggestionCard from './SuggestionCard';
-import customDrugOptions from './DrugOptions2.json';
-import customInteractions from './druginteractionsdata2.json';
+import customDrugOptions from './drugOptions.json';
+import customInteractions from './druginteractiondata.json';
 import './styles.css';
 
 const DrugInteractionChecker = () => {
@@ -16,43 +16,59 @@ const DrugInteractionChecker = () => {
 
   const allDrugOptions = useMemo(() => (
     Object.fromEntries(
-      Object.values(customDrugOptions || {}).map(drug => [drug, drug])
+      Object.entries(customDrugOptions || {}).map(([id, name]) => [name, name])
     )
   ), []);
 
   const findCustomInteractions = useCallback((drug1, drug2) => {
-    const interaction = (customInteractions || [])
-      .find(
-        (interaction) =>
-          (interaction.drug.toLowerCase() === drug1.toLowerCase() &&
-            interaction.interacting_drug.toLowerCase() === drug2.toLowerCase()) ||
-          (interaction.drug.toLowerCase() === drug2.toLowerCase() &&
-            interaction.interacting_drug.toLowerCase() === drug1.toLowerCase())
-      );
-    return interaction ? [{
+    const drug1Id = Object.keys(customDrugOptions).find(
+      key => customDrugOptions[key].toLowerCase() === drug1.toLowerCase()
+    );
+    const drug2Id = Object.keys(customDrugOptions).find(
+      key => customDrugOptions[key].toLowerCase() === drug2.toLowerCase()
+    );
+
+    if (!drug1Id || !drug2Id) return [];
+
+    const interactions1 = (customInteractions[drug1Id]?.interactions || []).map(([drug, desc]) => ({
       source: 'custom',
-      drug1: interaction.drug,
-      drug2: interaction.interacting_drug,
-      description: interaction.description,
-      extended_description: interaction.extended_description,
-      title: `${interaction.drug} + ${interaction.interacting_drug}`,
-    }] : [];
+      drug1: customDrugOptions[drug1Id],
+      drug2: customDrugOptions[drug.match(/DB\d+/)[0]] || drug.replace(/<[^>]+>/g, ''),
+      description: desc,
+      extended_description: desc,
+      title: `${customDrugOptions[drug1Id]} + ${customDrugOptions[drug.match(/DB\d+/)[0]] || drug.replace(/<[^>]+>/g, '')}`,
+    }));
+
+    const interactions2 = (customInteractions[drug2Id]?.interactions || []).map(([drug, desc]) => ({
+      source: 'custom',
+      drug1: customDrugOptions[drug2Id],
+      drug2: customDrugOptions[drug.match(/DB\d+/)[0]] || drug.replace(/<[^>]+>/g, ''),
+      description: desc,
+      extended_description: desc,
+      title: `${customDrugOptions[drug2Id]} + ${customDrugOptions[drug.match(/DB\d+/)[0]] || drug.replace(/<[^>]+>/g, '')}`,
+    }));
+
+    return [
+      ...interactions1.filter(i => i.drug2.toLowerCase() === drug2.toLowerCase()),
+      ...interactions2.filter(i => i.drug2.toLowerCase() === drug1.toLowerCase()),
+    ];
   }, []);
 
   const findRelatedInteractions = useCallback((drug) => {
-    return (customInteractions || [])
-      .filter(
-        (interaction) =>
-          interaction.drug.toLowerCase() === drug.toLowerCase() ||
-          interaction.interacting_drug.toLowerCase() === drug.toLowerCase()
-      )
-      .map((interaction) => ({
-        drug1: interaction.drug,
-        drug2: interaction.interacting_drug,
-        description: interaction.description,
-        extended_description: interaction.extended_description,
+    const drugId = Object.keys(customDrugOptions).find(
+      key => customDrugOptions[key].toLowerCase() === drug.toLowerCase()
+    );
+
+    if (!drugId) return [];
+
+    return (customInteractions[drugId]?.interactions || [])
+      .map(([interactingDrug, desc]) => ({
+        drug1: customDrugOptions[drugId],
+        drug2: customDrugOptions[interactingDrug.match(/DB\d+/)[0]] || interactingDrug.replace(/<[^>]+>/g, ''),
+        description: desc,
+        extended_description: desc,
       }))
-      .slice(0, 1); // Limit to one suggestion
+      .slice(0, 1);
   }, []);
 
   const checkInteractions = useCallback(() => {
