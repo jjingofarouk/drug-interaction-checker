@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { CheckCircle } from 'lucide-react';
 import DrugSearchInput from './DrugSearchInput';
 import InteractionCard from './InteractionCard';
 import SuggestionCard from './SuggestionCard';
@@ -146,7 +147,7 @@ const DrugInteractionChecker = () => {
             </div>
           ) : selectedDrug1 && selectedDrug2 ? (
             <div className="message-card">
-              <div className="no-interaction-icon">✓</div>
+              <CheckCircle className="no-interaction-icon" size={32} />
               <h3 className="message-title">No Interaction Found</h3>
               <p className="message-text">
                 No known interactions between {selectedDrug1} and {selectedDrug2}.
