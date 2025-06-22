@@ -58,7 +58,7 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 1rem;
 }
 
 .search-section {
@@ -107,7 +107,7 @@
   background-color: var(--white);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 1rem;
   margin-bottom: 1.5rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   position: relative;
@@ -173,7 +173,7 @@
   background-color: var(--white);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 1rem;
   text-align: center;
   box-shadow: var(--shadow);
   width: 100%;
@@ -233,7 +233,7 @@
   }
 
   .main-container {
-    padding: 1.5rem 0.75rem;
+    padding: 1rem 0.75rem;
   }
 
   .results-section-title {
@@ -241,7 +241,7 @@
   }
 
   .interaction-card {
-    padding: 1.25rem;
+    padding: 1rem;
   }
 
   .interaction-card .interaction-text {
@@ -253,7 +253,7 @@
   }
 
   .message-card {
-    padding: 1.25rem;
+    padding: 1rem;
   }
 
   .message-title {
