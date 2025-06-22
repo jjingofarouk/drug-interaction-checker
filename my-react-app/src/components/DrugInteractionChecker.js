@@ -4,7 +4,7 @@ import DrugSearchInput from './DrugSearchInput';
 import InteractionCard from './InteractionCard';
 import SuggestionCard from './SuggestionCard';
 import customDrugOptions from './drugOptions.json';
-import customInteractions from './druginteractionsdata.json';
+import customInteractions from './drugInteractionData.json';
 import './styles.css';
 
 const DrugInteractionChecker = () => {
@@ -68,7 +68,7 @@ const DrugInteractionChecker = () => {
         description: desc,
         extended_description: desc,
       }))
-      .slice(0, 1);
+      .slice(0, 10);
   }, []);
 
   const checkInteractions = useCallback(() => {
@@ -84,19 +84,17 @@ const DrugInteractionChecker = () => {
     if (selectedDrug1 && selectedDrug2) {
       foundInteractions = findCustomInteractions(selectedDrug1, selectedDrug2);
 
-      if (foundInteractions.length === 0) {
-        const drug1Related = findRelatedInteractions(selectedDrug1);
-        const drug2Related = findRelatedInteractions(selectedDrug2);
+      const drug1Related = findRelatedInteractions(selectedDrug1);
+      const drug2Related = findRelatedInteractions(selectedDrug2);
 
-        suggestedInteractions = [...drug1Related, ...drug2Related].filter(
-          (interaction, index, self) =>
-            index ===
-            self.findIndex(
-              (t) =>
-                t.drug1 === interaction.drug1 && t.drug2 === interaction.drug2
-            )
-        );
-      }
+      suggestedInteractions = [...drug1Related, ...drug2Related].filter(
+        (interaction, index, self) =>
+          index ===
+          self.findIndex(
+            (t) =>
+              t.drug1 === interaction.drug1 && t.drug2 === interaction.drug2
+          )
+      ).slice(0, 10);
     }
 
     setInteractions(foundInteractions);
@@ -160,6 +158,14 @@ const DrugInteractionChecker = () => {
               {interactions.map((interaction, index) => (
                 <InteractionCard key={index} interaction={interaction} />
               ))}
+              {suggestions.length > 0 && (
+                <div className="suggestions-section">
+                  <h4 className="suggestions-title">Related Interactions</h4>
+                  {suggestions.map((suggestion, index) => (
+                    <SuggestionCard key={index} suggestion={suggestion} />
+                  ))}
+                </div>
+              )}
             </div>
           ) : selectedDrug1 && selectedDrug2 ? (
             <div className="message-card">
@@ -170,7 +176,7 @@ const DrugInteractionChecker = () => {
               </p>
               {suggestions.length > 0 && (
                 <div className="suggestions-section">
-                  <h4 className="suggestions-title">Related Interaction</h4>
+                  <h4 className="suggestions-title">Related Interactions</h4>
                   {suggestions.map((suggestion, index) => (
                     <SuggestionCard key={index} suggestion={suggestion} />
                   ))}
