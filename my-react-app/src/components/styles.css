@@ -46,11 +46,11 @@
   font-size: 2rem;
   font-weight: 700;
   color: var(--white);
-  word-wrap: break-word; /* Ensure text wraps */
-  overflow-wrap: break-word; /* Modern alternative to word-wrap */
-  hyphens: auto; /* Allow hyphenation for long words */
-  max-width: 100%; /* Prevent overflow */
-  line-height: 1.2; /* Improve readability */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+  line-height: 1.2;
 }
 
 /* Main Container */
@@ -87,6 +87,10 @@
   margin-top: 2rem;
 }
 
+.results-section {
+  margin-bottom: 2rem;
+}
+
 .results-section-title {
   font-size: 1.5rem;
   font-weight: 700;
@@ -98,6 +102,73 @@
   max-width: 100%;
 }
 
+/* Interaction Card (Matches SuggestionCard) */
+.interaction-card {
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  width: 100%;
+}
+
+.interaction-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.interaction-card .drug-combination {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+  gap: 0.75rem;
+}
+
+.interaction-card .drug-pill {
+  background-color: var(--primary);
+  color: var(--white);
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.interaction-card .drug-pill:hover {
+  background-color: var(--accent);
+}
+
+.interaction-card .plus-icon {
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0.5rem;
+}
+
+.interaction-card .interaction-text {
+  color: var(--text-primary);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-weight: 400;
+}
+
+.interaction-card .extended-description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-weight: 300;
+}
+
+/* Message Card */
 .message-card {
   background-color: var(--white);
   border: 1px solid var(--border);
@@ -105,6 +176,7 @@
   padding: 1.5rem;
   text-align: center;
   box-shadow: var(--shadow);
+  width: 100%;
 }
 
 .no-interaction-icon {
@@ -164,12 +236,24 @@
     padding: 1.5rem 0.75rem;
   }
 
-  .message-card {
+  .results-section-title {
+    font-size: 1.35rem;
+  }
+
+  .interaction-card {
     padding: 1.25rem;
   }
 
-  .results-section-title {
-    font-size: 1.35rem;
+  .interaction-card .interaction-text {
+    font-size: 0.95rem;
+  }
+
+  .interaction-card .extended-description {
+    font-size: 0.85rem;
+  }
+
+  .message-card {
+    padding: 1.25rem;
   }
 
   .message-title {
@@ -216,6 +300,24 @@
 
   .results-section-title {
     font-size: 1.25rem;
+  }
+
+  .interaction-card {
+    padding: 1rem;
+  }
+
+  .interaction-card .drug-combination {
+    gap: 0.5rem;
+  }
+
+  .interaction-card .drug-pill {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .interaction-card .plus-icon {
+    font-size: 1rem;
+    margin: 0 0.4rem;
   }
 
   .message-card {
