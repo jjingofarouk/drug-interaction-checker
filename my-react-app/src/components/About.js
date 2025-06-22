@@ -148,9 +148,7 @@ const About = () => {
             dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
           />
           
-          <Typography variant="h1" className="about-title">
-            About Drug Interaction Checker
-          </Typography>
+
 
           <Typography className="intro-text">
             The Drug Interaction Checker is a cutting-edge platform designed to support <strong>healthcare professionals</strong>, <strong>medical students</strong>, and <strong>pharmacists</strong> in Uganda. It enables safe prescribing by providing accurate <strong>drug interaction checks</strong>, <strong>clinical decision support</strong>, and access to a collaborative network for <strong>healthcare innovation</strong> in <strong>East Africa</strong>.
