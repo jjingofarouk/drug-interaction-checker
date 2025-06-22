@@ -4,7 +4,7 @@ import DrugSearchInput from './DrugSearchInput';
 import InteractionCard from './InteractionCard';
 import SuggestionCard from './SuggestionCard';
 import customDrugOptions from './drugOptions.json';
-import customInteractions from './drugInteractionData.json';
+import customInteractions from './druginteractiondata.json';
 import './styles.css';
 
 const DrugInteractionChecker = () => {
