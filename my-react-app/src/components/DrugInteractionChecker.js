@@ -112,7 +112,7 @@ const DrugInteractionChecker = () => {
           description,
           extended_description: description,
         }))
-        .slice(0, 10);
+        .slice(0, 5);
     } catch (err) {
       console.error('Error fetching related interactions:', err);
       return [];
@@ -145,7 +145,7 @@ const DrugInteractionChecker = () => {
               (t) => t.drug1 === interaction.drug1 && t.drug2 === interaction.drug2
             )
         )
-        .slice(0, 10);
+        .slice(0, 5);
     }
 
     setInteractions(foundInteractions);
