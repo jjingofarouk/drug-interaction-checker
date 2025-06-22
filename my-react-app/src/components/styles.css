@@ -15,6 +15,8 @@
   --white: #FFFFFF; /* Pure white for contrast */
   --border: #D1D5DB; /* Subtle gray for borders */
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --error: #DC2626; /* Red for error states */
+  --success: #059669; /* Green for success states */
 }
 
 /* Container */
@@ -31,7 +33,7 @@
 .hero-section {
   background-color: var(--primary);
   text-align: center;
-  padding: 2rem 1rem;
+  padding: 2.5rem 1rem;
   width: 100%;
 }
 
@@ -39,18 +41,19 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
 }
 
 .hero-title {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.25rem;
+  font-weight: 800;
   color: var(--white);
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
   max-width: 100%;
-  line-height: 1.2;
+  line-height: 1.3;
+  letter-spacing: -0.025rem;
 }
 
 /* Main Container */
@@ -58,17 +61,18 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
+/* Search Section */
 .search-section {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .search-inputs-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
 .input-wrapper {
@@ -77,39 +81,42 @@
 }
 
 .input-label {
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
   color: var(--text-secondary);
+  transition: color 0.2s ease;
 }
 
 /* Results Section */
 .results-container {
-  margin-top: 2rem;
+  margin-top: 2.5rem;
 }
 
 .results-section {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .results-section-title {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
-  text-align: center;
+  margin-bottom: 2rem;
+  text-align: left;
   color: var(--text-primary);
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 100%;
+  letter-spacing: -0.025rem;
 }
 
-/* Interaction Card (Matches SuggestionCard) */
+/* Interaction Card */
 .interaction-card {
   background-color: var(--white);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow);
@@ -117,53 +124,54 @@
 }
 
 .interaction-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 20px -4px rgba(0, 0, 0, 0.1), 0 6px 8px -2px rgba(0, 0, 0, 0.05);
 }
 
 .interaction-card .drug-combination {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  margin-bottom: 1.25rem;
-  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
 }
 
 .interaction-card .drug-pill {
   background-color: var(--primary);
   color: var(--white);
   border-radius: 999px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.25rem;
   border: none;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .interaction-card .drug-pill:hover {
   background-color: var(--accent);
+  transform: scale(1.05);
 }
 
 .interaction-card .plus-icon {
   color: var(--text-secondary);
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  margin: 0 0.5rem;
+  margin: 0 0.75rem;
 }
 
 .interaction-card .interaction-text {
   color: var(--text-primary);
-  font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
   font-weight: 400;
 }
 
 .interaction-card .extended-description {
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.6;
-  padding-top: 1rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  padding-top: 1.25rem;
   border-top: 1px solid var(--border);
   font-weight: 300;
 }
@@ -172,23 +180,32 @@
 .message-card {
   background-color: var(--white);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1rem;
+  border-radius: 12px;
+  padding: 1.5rem;
   text-align: center;
   box-shadow: var(--shadow);
   width: 100%;
+  transition: border-color 0.3s ease;
+}
+
+.message-card.success {
+  border-color: var(--success);
+}
+
+.message-card.error {
+  border-color: var(--error);
 }
 
 .no-interaction-icon {
-  font-size: 2rem;
-  color: var(--accent);
-  margin-bottom: 0.75rem;
+  font-size: 2.5rem;
+  color: var(--success);
+  margin-bottom: 1rem;
 }
 
 .message-title {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   color: var(--text-primary);
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -196,21 +213,22 @@
 }
 
 .message-text {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--text-secondary);
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 100%;
+  line-height: 1.6;
 }
 
 .suggestions-section {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
 }
 
 .suggestions-title {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  margin: 1.5rem 0 0.75rem;
+  margin: 2rem 0 1rem;
   color: var(--text-primary);
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -220,6 +238,61 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .hero-section {
+    padding: 2rem 1rem;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-content {
+    padding: 0 1rem;
+  }
+
+  .main-container {
+    padding: 1.25rem 1rem;
+  }
+
+  .search-inputs-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .results-section-title {
+    font-size: 1.5rem;
+  }
+
+  .interaction-card {
+    padding: 1.25rem;
+  }
+
+  .interaction-card .interaction-text {
+    font-size: 1rem;
+  }
+
+  .interaction-card .extended-description {
+    font-size: 0.9rem;
+  }
+
+  .message-card {
+    padding: 1.25rem;
+  }
+
+  .message-title {
+    font-size: 1.25rem;
+  }
+
+  .message-text {
+    font-size: 1rem;
+  }
+
+  .suggestions-title {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
     padding: 1.5rem 0.75rem;
   }
 
@@ -227,13 +300,24 @@
     font-size: 1.75rem;
   }
 
-  .search-inputs-container {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  .hero-content {
+    padding: 0 0.75rem;
   }
 
   .main-container {
     padding: 1rem 0.75rem;
+  }
+
+  .search-inputs-container {
+    gap: 1rem;
+  }
+
+  .input-label {
+    font-size: 1rem;
+  }
+
+  .results-container {
+    margin-top: 2rem;
   }
 
   .results-section-title {
@@ -244,16 +328,26 @@
     padding: 1rem;
   }
 
-  .interaction-card .interaction-text {
-    font-size: 0.95rem;
+  .interaction-card .drug-combination {
+    gap: 0.75rem;
   }
 
-  .interaction-card .extended-description {
-    font-size: 0.85rem;
+  .interaction-card .drug-pill {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .interaction-card .plus-icon {
+    font-size: 1.25rem;
+    margin: 0 0.5rem;
   }
 
   .message-card {
     padding: 1rem;
+  }
+
+  .no-interaction-icon {
+    font-size: 2rem;
   }
 
   .message-title {
@@ -265,78 +359,6 @@
   }
 
   .suggestions-title {
-    font-size: 1.05rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-section {
-    padding: 1rem 0.5rem;
-  }
-
-  .hero-title {
-    font-size: 1.5rem;
-  }
-
-  .hero-content {
-    padding: 0 0.5rem;
-  }
-
-  .main-container {
-    padding: 1rem 0.5rem;
-  }
-
-  .search-inputs-container {
-    gap: 0.75rem;
-  }
-
-  .input-label {
-    font-size: 0.95rem;
-  }
-
-  .results-container {
-    margin-top: 1.5rem;
-  }
-
-  .results-section-title {
-    font-size: 1.25rem;
-  }
-
-  .interaction-card {
-    padding: 1rem;
-  }
-
-  .interaction-card .drug-combination {
-    gap: 0.5rem;
-  }
-
-  .interaction-card .drug-pill {
-    font-size: 0.85rem;
-    padding: 0.4rem 0.8rem;
-  }
-
-  .interaction-card .plus-icon {
-    font-size: 1rem;
-    margin: 0 0.4rem;
-  }
-
-  .message-card {
-    padding: 1rem;
-  }
-
-  .no-interaction-icon {
-    font-size: 1.75rem;
-  }
-
-  .message-title {
     font-size: 1.1rem;
-  }
-
-  .message-text {
-    font-size: 0.9rem;
-  }
-
-  .suggestions-title {
-    font-size: 1rem;
   }
 }
