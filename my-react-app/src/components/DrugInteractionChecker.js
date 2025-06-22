@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { CheckCircle } from 'lucide-react';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
-import { db } from '../../firebaseConfig'; // Import Firestore instance
+import { db } from '../firebaseConfig'; // Import Firestore instance
 import DrugSearchInput from './DrugSearchInput';
 import InteractionCard from './InteractionCard';
 import SuggestionCard from './SuggestionCard';
