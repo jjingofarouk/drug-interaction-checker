@@ -10,13 +10,14 @@ import './styles.css';
 const DrugInteractionChecker = () => {
   const [selectedDrug1, setSelectedDrug1] = useState('');
   const [selectedDrug2, setSelectedDrug2] = useState('');
+  const [singleDrug, setSingleDrug] = useState('');
   const [interactions, setInteractions] = useState([]);
+  const [singleDrugInteractions, setSingleDrugInteractions] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [activeInput, setActiveInput] = useState(null);
   const [drugOptions, setDrugOptions] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [singleDrugInteractions, setSingleDrugInteractions] = useState([]);
 
   useEffect(() => {
     const fetchDrugOptions = async () => {
@@ -153,15 +154,13 @@ const DrugInteractionChecker = () => {
     setSuggestions([]);
     setSingleDrugInteractions([]);
 
-    if (!selectedDrug1 && !selectedDrug2) {
-      return;
-    }
-
     let foundInteractions = [];
     let suggestedInteractions = [];
     let singleInteractions = [];
 
-    if (selectedDrug1 && selectedDrug2) {
+    if (singleDrug) {
+      singleInteractions = await findSingleDrugInteractions(singleDrug);
+    } else if (selectedDrug1 && selectedDrug2) {
       foundInteractions = await findCustomInteractions(selectedDrug1, selectedDrug2);
 
       const [drug1Related, drug2Related] = await Promise.all([
@@ -178,16 +177,12 @@ const DrugInteractionChecker = () => {
             )
         )
         .slice(0, 5);
-    } else if (selectedDrug1) {
-      singleInteractions = await findSingleDrugInteractions(selectedDrug1);
-    } else if (selectedDrug2) {
-      singleInteractions = await findSingleDrugInteractions(selectedDrug2);
     }
 
     setInteractions(foundInteractions);
     setSuggestions(suggestedInteractions);
     setSingleDrugInteractions(singleInteractions);
-  }, [selectedDrug1, selectedDrug2, findCustomInteractions, findRelatedInteractions, findSingleDrugInteractions]);
+  }, [selectedDrug1, selectedDrug2, singleDrug, findCustomInteractions, findRelatedInteractions, findSingleDrugInteractions]);
 
   useEffect(() => {
     if (Object.keys(drugOptions).length > 0) {
@@ -197,6 +192,11 @@ const DrugInteractionChecker = () => {
 
   const handleInputFocus = useCallback((index) => setActiveInput(index), []);
   const handleScreenPress = useCallback(() => setActiveInput(null), []);
+
+  const handleSingleDrugClear = () => {
+    setSingleDrug('');
+    setSingleDrugInteractions([]);
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -210,6 +210,31 @@ const DrugInteractionChecker = () => {
       </div>
       <div className="main-container">
         <div className="search-section">
+          <h2 className="search-section-title">Single Drug Interaction Search</h2>
+          <div className="search-inputs-container">
+            <div className="input-wrapper">
+              <label className="input-label">Search Medication</label>
+              <DrugSearchInput
+                value={singleDrug}
+                onSelect={setSingleDrug}
+                placeholder="Enter a medication..."
+                onFocus={handleInputFocus}
+                inputIndex={0}
+                activeInput={activeInput}
+                zIndex={3}
+                allDrugOptions={allDrugOptions}
+              />
+              {singleDrug && (
+                <button
+                  className="clear-button"
+                  onClick={handleSingleDrugClear}
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+          </div>
+          <h2 className="search-section-title">Pairwise Drug Interaction Search</h2>
           <div className="search-inputs-container">
             <div className="input-wrapper">
               <label className="input-label">Medication 1</label>
@@ -242,10 +267,18 @@ const DrugInteractionChecker = () => {
         <div className="results-container">
           {singleDrugInteractions.length > 0 ? (
             <div className="results-section">
-              <h2 className="results-section-title">Drug Interactions for {selectedDrug1 || selectedDrug2}</h2>
+              <h2 className="results-section-title">Interactions for {singleDrug}</h2>
               {singleDrugInteractions.map((interaction, index) => (
                 <InteractionCard key={index} interaction={interaction} />
               ))}
+            </div>
+          ) : singleDrug ? (
+            <div className="message-card">
+              <CheckCircle className="no-interaction-icon" size={32} />
+              <h3 className="message-title">No Interactions Found</h3>
+              <p className="message-text">
+                No known interactions for {singleDrug}.
+              </p>
             </div>
           ) : interactions.length > 0 ? (
             <div className="results-section">
@@ -282,7 +315,7 @@ const DrugInteractionChecker = () => {
             <div className="message-card">
               <h3 className="message-title">Check Medications</h3>
               <p className="message-text">
-                Enter one or two drugs to check for interactions.
+                Enter one drug to see all its interactions or two drugs to check for specific interactions.
               </p>
             </div>
           )}
