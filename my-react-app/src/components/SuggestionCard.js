@@ -36,6 +36,7 @@ const SuggestionCard = React.memo(({ suggestion }) => {
           overflow: hidden;
           box-shadow: var(--shadow);
           font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+          width: 100%;
         }
         
         .suggestion-card:hover {
