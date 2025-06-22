@@ -7,23 +7,28 @@
 
 /* Global Variables */
 :root {
-  --black: #000000;
-  --white: #ffffff;
+  --primary: #2C3E50; /* Deep navy for professionalism */
+  --secondary: #ECF0F1; /* Light gray for clean background */
+  --accent: #3498DB; /* Blue for trust and reliability */
+  --text-primary: #2C3E50; /* Dark navy for text */
+  --text-secondary: #7F8C8D; /* Muted gray for secondary text */
+  --white: #FFFFFF; /* Pure white for contrast */
+  --border: #BDC3C7; /* Subtle gray for borders */
 }
 
 /* Container */
 .container {
-  background-color: var(--black);
+  background-color: var(--secondary);
   min-height: 100vh;
   font-family: 'Arial', sans-serif;
-  color: var(--white);
+  color: var(--text-primary);
   width: 100vw;
   overflow-x: hidden;
 }
 
 /* Hero Section */
 .hero-section {
-  background-color: var(--black);
+  background-color: var(--primary);
   text-align: center;
   width: 100vw;
 }
@@ -35,6 +40,7 @@
 .hero-title {
   font-size: 2rem;
   font-weight: bold;
+  color: var(--white);
 }
 
 /* Main Container */
@@ -60,6 +66,7 @@
 .input-label {
   font-size: 1rem;
   margin-bottom: 0.5rem;
+  color: var(--text-secondary);
 }
 
 /* DrugSearchInput Styles */
@@ -71,19 +78,19 @@
 .drug-search-input input {
   width: 100%;
   font-size: 1rem;
-  color: var(--black);
+  color: var(--text-primary);
   background-color: var(--white);
-  border: 1px solid var(--white);
+  border: 1px solid var(--border);
   border-radius: 4px;
   outline: none;
 }
 
 .drug-search-input input:focus {
-  border-color: var(--white);
+  border-color: var(--accent);
 }
 
 .drug-search-input input::placeholder {
-  color: var(--black);
+  color: var(--text-secondary);
 }
 
 .drug-search-input .dropdown {
@@ -92,7 +99,7 @@
   left: 0;
   right: 0;
   background-color: var(--white);
-  border: 1px solid var(--white);
+  border: 1px solid var(--border);
   border-radius: 4px;
   max-height: 200px;
   overflow-y: auto;
@@ -102,12 +109,12 @@
 
 .drug-search-input .dropdown-item {
   font-size: 1rem;
-  color: var(--black);
+  color: var(--text-primary);
   cursor: pointer;
 }
 
 .drug-search-input .dropdown-item:hover {
-  background-color: var(--black);
+  background-color: var(--accent);
   color: var(--white);
 }
 
@@ -120,18 +127,19 @@
   font-weight: bold;
   margin-bottom: 1rem;
   text-align: center;
+  color: var(--text-primary);
 }
 
 .message-card {
-  background-color: var(--black);
-  border: 1px solid var(--white);
+  background-color: var(--white);
+  border: 1px solid var(--border);
   border-radius: 4px;
   text-align: center;
 }
 
 .no-interaction-icon {
   font-size: 2rem;
-  color: var(--white);
+  color: var(--accent);
   margin-bottom: 0.5rem;
 }
 
@@ -139,17 +147,19 @@
   font-size: 1.25rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
+  color: var(--text-primary);
 }
 
 .message-text {
   font-size: 1rem;
-  color: var(--white);
+  color: var(--text-secondary);
 }
 
 .suggestions-title {
   font-size: 1.1rem;
   font-weight: bold;
   margin: 1rem 0 0.5rem;
+  color: var(--text-primary);
 }
 
 /* Responsive Design */
