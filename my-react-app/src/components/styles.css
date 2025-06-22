@@ -39,12 +39,18 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 1rem;
 }
 
 .hero-title {
   font-size: 2rem;
   font-weight: 700;
   color: var(--white);
+  word-wrap: break-word; /* Ensure text wraps */
+  overflow-wrap: break-word; /* Modern alternative to word-wrap */
+  hyphens: auto; /* Allow hyphenation for long words */
+  max-width: 100%; /* Prevent overflow */
+  line-height: 1.2; /* Improve readability */
 }
 
 /* Main Container */
@@ -87,6 +93,9 @@
   margin-bottom: 1.5rem;
   text-align: center;
   color: var(--text-primary);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .message-card {
@@ -109,11 +118,21 @@
   font-weight: 700;
   margin-bottom: 0.75rem;
   color: var(--text-primary);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .message-text {
   font-size: 1rem;
   color: var(--text-secondary);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.suggestions-section {
+  margin-top: 1.5rem;
 }
 
 .suggestions-title {
@@ -121,10 +140,17 @@
   font-weight: 700;
   margin: 1.5rem 0 0.75rem;
   color: var(--text-primary);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .hero-section {
+    padding: 1.5rem 0.75rem;
+  }
+
   .hero-title {
     font-size: 1.75rem;
   }
@@ -141,19 +167,51 @@
   .message-card {
     padding: 1.25rem;
   }
+
+  .results-section-title {
+    font-size: 1.35rem;
+  }
+
+  .message-title {
+    font-size: 1.15rem;
+  }
+
+  .message-text {
+    font-size: 0.95rem;
+  }
+
+  .suggestions-title {
+    font-size: 1.05rem;
+  }
 }
 
 @media (max-width: 480px) {
   .hero-section {
-    padding: 1.5rem 0.75rem;
+    padding: 1rem 0.5rem;
   }
 
   .hero-title {
     font-size: 1.5rem;
   }
 
+  .hero-content {
+    padding: 0 0.5rem;
+  }
+
   .main-container {
     padding: 1rem 0.5rem;
+  }
+
+  .search-inputs-container {
+    gap: 0.75rem;
+  }
+
+  .input-label {
+    font-size: 0.95rem;
+  }
+
+  .results-container {
+    margin-top: 1.5rem;
   }
 
   .results-section-title {
@@ -162,6 +220,10 @@
 
   .message-card {
     padding: 1rem;
+  }
+
+  .no-interaction-icon {
+    font-size: 1.75rem;
   }
 
   .message-title {
