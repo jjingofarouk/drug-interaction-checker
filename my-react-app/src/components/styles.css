@@ -1,26 +1,4 @@
-/* Global Reset */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* Root Variables */
-:root {
-  --primary: #1A3C5A; /* Deep navy for professionalism */
-  --secondary: #F8FAFC; /* Light gray for clean background */
-  --accent: #2563EB; /* Vibrant blue for trust and engagement */
-  --text-primary: #1F2937; /* Dark gray for primary text */
-  --text-secondary: #6B7280; /* Muted gray for secondary text */
-  --white: #FFFFFF; /* Pure white for contrast */
-  --border: #D1D5DB; /* Subtle gray for borders */
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --error: #DC2626; /* Red for error states */
-  --success: #059669; /* Green for success states */
-  --pagination-bg: #E5E7EB; /* Light gray for pagination */
-  --pagination-active: var(--accent);
-  --pagination-text: var(--text-primary);
-}
+/* Updated styles.css for DrugInteractionChecker */
 
 /* Container */
 .container {
@@ -29,66 +7,103 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   color: var(--text-primary);
   width: 100%;
-  overflow-x: hidden;
 }
 
 /* Hero Section */
 .hero-section {
-  background: linear-gradient(135deg, var(--primary) 60%, #2A5478 100%);
-  text-align: center;
-  padding: 3rem 1rem;
-  width: 100%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.1) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .hero-content {
   width: 100%;
-  max-width: 1200px;
+  max-width: var(--content-max-width);
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: var(--spacing-3xl) var(--spacing-xl);
+  position: relative;
+  z-index: 1;
+  text-align: center;
 }
 
 .hero-title {
-  font-size: 2.5rem;
+  font-size: 3rem;
   font-weight: 800;
   color: var(--white);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  hyphens: auto;
-  max-width: 100%;
+  margin-bottom: var(--spacing-md);
   line-height: 1.2;
-  letter-spacing: -0.025rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.03em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.hero-description {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+  font-weight: 400;
 }
 
 /* Main Container */
 .main-container {
   width: 100%;
-  max-width: 1200px;
+  max-width: var(--content-max-width);
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: var(--spacing-3xl) var(--spacing-xl);
 }
 
 /* Search Section */
 .search-section {
-  margin-bottom: 3rem;
+  margin-bottom: var(--spacing-3xl);
   background-color: var(--white);
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: var(--shadow);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-2xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+  transition: box-shadow var(--transition-base);
+}
+
+.search-section:hover {
+  box-shadow: var(--shadow-lg);
 }
 
 .search-section-title {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 1.5rem;
-  letter-spacing: -0.025rem;
+  margin-bottom: var(--spacing-xl);
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.search-section-title::before {
+  content: '';
+  width: 4px;
+  height: 24px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-light) 100%);
+  border-radius: 2px;
 }
 
 .search-inputs-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-xl);
 }
 
 .input-wrapper {
@@ -98,111 +113,143 @@
 }
 
 .input-label {
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin-bottom: 0.75rem;
-  color: var(--text-secondary);
-  transition: color 0.2s ease;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+  transition: color var(--transition-base);
 }
 
 .clear-button {
-  background-color: var(--accent);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
   color: var(--white);
   border: none;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  font-size: 0.95rem;
-  font-weight: 500;
+  border-radius: var(--radius-md);
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
   cursor: pointer;
-  margin-top: 0.5rem;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  margin-top: var(--spacing-md);
+  transition: all var(--transition-base);
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
 }
 
 .clear-button:hover {
-  background-color: #1D4ED8;
   transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
 }
 
 .clear-button:active {
   transform: translateY(0);
 }
 
+/* Divider */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--border) 50%, transparent 100%);
+  margin: var(--spacing-2xl) 0;
+}
+
 /* Results Section */
 .results-container {
-  margin-top: 3rem;
+  margin-top: var(--spacing-3xl);
 }
 
 .results-section {
-  margin-bottom: 3rem;
+  margin-bottom: var(--spacing-3xl);
 }
 
 .results-section-title {
-  font-size: 1.75rem;
+  font-size: 1.875rem;
   font-weight: 700;
-  margin-bottom: 2rem;
-  text-align: left;
+  margin-bottom: var(--spacing-2xl);
   color: var(--text-primary);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
-  letter-spacing: -0.025rem;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.results-section-title::before {
+  content: '';
+  width: 6px;
+  height: 32px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-light) 100%);
+  border-radius: 3px;
 }
 
 /* Interaction Card */
 .interaction-card {
   background-color: var(--white);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+  transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
-  box-shadow: var(--shadow);
-  width: 100%;
+  box-shadow: var(--shadow-sm);
+}
+
+.interaction-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-light) 100%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
 }
 
 .interaction-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 20px -4px rgba(0, 0, 0, 0.1), 0 6px 8px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent);
+}
+
+.interaction-card:hover::before {
+  opacity: 1;
 }
 
 .interaction-card .drug-combination {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
-  gap: 1rem;
+  margin-bottom: var(--spacing-xl);
+  gap: var(--spacing-md);
 }
 
 .interaction-card .drug-pill {
-  background-color: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
   color: var(--white);
   border-radius: 999px;
   font-size: 1rem;
   font-weight: 600;
-  padding: 0.6rem 1.25rem;
+  padding: 0.625rem 1.5rem;
   border: none;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: all var(--transition-base);
+  box-shadow: 0 2px 4px rgba(26, 60, 90, 0.2);
 }
 
 .interaction-card .drug-pill:hover {
-  background-color: var(--accent);
   transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(26, 60, 90, 0.3);
 }
 
 .interaction-card .plus-icon {
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   font-size: 1.5rem;
   font-weight: 700;
-  margin: 0 0.75rem;
+  margin: 0 var(--spacing-sm);
 }
 
 .interaction-card .interaction-text {
   color: var(--text-primary);
-  font-size: 1.1rem;
-  line-height: 1.7;
-  margin-bottom: 1.25rem;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  margin-bottom: var(--spacing-lg);
   font-weight: 400;
 }
 
@@ -210,68 +257,60 @@
   color: var(--text-secondary);
   font-size: 1rem;
   line-height: 1.7;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--border);
-  font-weight: 300;
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--border-light);
+  font-weight: 400;
 }
 
 /* Message Card */
 .message-card {
   background-color: var(--white);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 2rem;
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-3xl);
   text-align: center;
-  box-shadow: var(--shadow);
-  width: 100%;
-  transition: border-color 0.3s ease;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
 }
 
-.message-card.success {
-  border-color: var(--success);
-}
-
-.message-card.error {
-  border-color: var(--error);
+.message-card:hover {
+  box-shadow: var(--shadow-lg);
 }
 
 .no-interaction-icon {
-  font-size: 2.5rem;
+  font-size: 3rem;
   color: var(--success);
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-lg);
+  animation: fadeIn 0.5s ease;
 }
 
 .message-title {
   font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
   color: var(--text-primary);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
+  letter-spacing: -0.02em;
 }
 
 .message-text {
-  font-size: 1.1rem;
+  font-size: 1.0625rem;
   color: var(--text-secondary);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
+/* Suggestions Section */
 .suggestions-section {
-  margin-top: 2rem;
+  margin-top: var(--spacing-3xl);
+  padding-top: var(--spacing-2xl);
+  border-top: 2px solid var(--border-light);
 }
 
 .suggestions-title {
   font-size: 1.25rem;
   font-weight: 700;
-  margin: 2rem 0 1rem;
+  margin-bottom: var(--spacing-xl);
   color: var(--text-primary);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
+  letter-spacing: -0.02em;
 }
 
 /* Pagination */
@@ -279,193 +318,219 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 2rem;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-2xl);
+  flex-wrap: wrap;
 }
 
 .pagination-button {
-  background-color: var(--pagination-bg);
-  color: var(--pagination-text);
-  border: none;
-  border-radius: 8px;
-  padding: 0.75rem 1.25rem;
-  font-size: 1rem;
-  font-weight: 500;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--white);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0 var(--spacing-md);
+  font-size: 0.9375rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition: all var(--transition-base);
 }
 
-.pagination-button:hover {
+.pagination-button:hover:not(:disabled) {
   background-color: var(--accent);
   color: var(--white);
+  border-color: var(--accent);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .pagination-button.active {
-  background-color: var(--pagination-active);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
   color: var(--white);
+  border-color: var(--accent);
   cursor: default;
-  transform: none;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
 }
 
 .pagination-button:disabled {
-  background-color: var(--border);
-  color: var(--text-secondary);
+  background-color: var(--border-light);
+  color: var(--text-tertiary);
   cursor: not-allowed;
-  transform: none;
+  opacity: 0.6;
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .hero-section {
-    padding: 2.5rem 1rem;
+@media (max-width: 1024px) {
+  .hero-title {
+    font-size: 2.5rem;
   }
+  
+  .hero-description {
+    font-size: 1.125rem;
+  }
+}
 
+@media (max-width: 768px) {
+  .hero-content {
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+  
   .hero-title {
     font-size: 2rem;
   }
-
-  .hero-content {
-    padding: 0 1rem;
+  
+  .hero-description {
+    font-size: 1rem;
   }
-
+  
   .main-container {
-    padding: 1.5rem 1rem;
+    padding: var(--spacing-2xl) var(--spacing-lg);
   }
-
+  
   .search-section {
-    padding: 1.5rem;
+    padding: var(--spacing-xl);
   }
-
+  
   .search-inputs-container {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: var(--spacing-lg);
   }
-
+  
   .search-section-title {
-    font-size: 1.35rem;
+    font-size: 1.375rem;
   }
-
+  
   .results-section-title {
-    font-size: 1.5rem;
+    font-size: 1.625rem;
   }
-
+  
   .interaction-card {
-    padding: 1.25rem;
+    padding: var(--spacing-lg);
   }
-
-  .interaction-card .interaction-text {
-    font-size: 1rem;
-  }
-
-  .interaction-card .extended-description {
-    font-size: 0.9rem;
-  }
-
+  
   .message-card {
-    padding: 1.5rem;
+    padding: var(--spacing-2xl);
   }
-
-  .message-title {
-    font-size: 1.25rem;
-  }
-
-  .message-text {
-    font-size: 1rem;
-  }
-
-  .suggestions-title {
-    font-size: 1.15rem;
-  }
-
+  
   .pagination-button {
-    padding: 0.6rem 1rem;
-    font-size: 0.95rem;
+    min-width: 36px;
+    height: 36px;
+    font-size: 0.875rem;
   }
 }
 
 @media (max-width: 480px) {
-  .hero-section {
-    padding: 2rem 0.75rem;
+  .hero-content {
+    padding: var(--spacing-xl) var(--spacing-md);
   }
-
+  
   .hero-title {
     font-size: 1.75rem;
   }
-
-  .hero-content {
-    padding: 0 0.75rem;
+  
+  .hero-description {
+    font-size: 0.9375rem;
   }
-
+  
   .main-container {
-    padding: 1rem 0.75rem;
+    padding: var(--spacing-xl) var(--spacing-md);
   }
-
+  
   .search-section {
-    padding: 1rem;
+    padding: var(--spacing-lg);
   }
-
-  .search-inputs-container {
-    gap: 1rem;
+  
+  .search-section-title {
+    font-size: 1.25rem;
   }
-
+  
   .input-label {
-    font-size: 1rem;
+    font-size: 0.875rem;
   }
-
+  
   .clear-button {
-    font-size: 0.9rem;
-    padding: 0.4rem 0.8rem;
-  }
-
-  .results-container {
-    margin-top: 2rem;
-  }
-
-  .results-section-title {
-    font-size: 1.35rem;
-  }
-
-  .interaction-card {
-    padding: 1rem;
-  }
-
-  .interaction-card .drug-combination {
-    gap: 0.75rem;
-  }
-
-  .interaction-card .drug-pill {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     padding: 0.5rem 1rem;
   }
-
+  
+  .results-section-title {
+    font-size: 1.5rem;
+  }
+  
+  .interaction-card {
+    padding: var(--spacing-md);
+  }
+  
+  .interaction-card .drug-pill {
+    font-size: 0.9375rem;
+    padding: 0.5rem 1.25rem;
+  }
+  
   .interaction-card .plus-icon {
     font-size: 1.25rem;
-    margin: 0 0.5rem;
   }
-
+  
+  .interaction-card .interaction-text {
+    font-size: 1rem;
+  }
+  
+  .interaction-card .extended-description {
+    font-size: 0.9375rem;
+  }
+  
   .message-card {
-    padding: 1rem;
+    padding: var(--spacing-xl);
   }
-
+  
   .no-interaction-icon {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
-
+  
   .message-title {
-    font-size: 1.15rem;
+    font-size: 1.25rem;
   }
-
+  
   .message-text {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
-
+  
   .suggestions-title {
-    font-size: 1.1rem;
+    font-size: 1.125rem;
   }
-
+  
+  .pagination-container {
+    gap: var(--spacing-xs);
+  }
+  
   .pagination-button {
-    padding: 0.5rem 0.8rem;
-    font-size: 0.9rem;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 var(--spacing-sm);
+    font-size: 0.8125rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
