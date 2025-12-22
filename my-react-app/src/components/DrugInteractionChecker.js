@@ -297,14 +297,7 @@ const DrugInteractionChecker = () => {
 
   return (
     <div className="container" onClick={handleScreenPress}>
-      <div className="hero-section">
-        <div className="hero-content">
-          <h1 className="hero-title">Fraha Drug Safety</h1>
-          <p className="hero-description">
-            Check for interactions between medications to ensure safe use. Powered by FrahaAI
-          </p>
-        </div>
-      </div>
+
       <div className="main-container">
         <div className="search-section">
           <h2 className="search-section-title">Check Drug Interactions</h2>
