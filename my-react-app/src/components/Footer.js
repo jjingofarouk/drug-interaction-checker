@@ -1,6 +1,6 @@
 // src/components/Footer.js
 import React from 'react';
-import logo from './pharmacy-logo.png';
+import logo from './logo.png';
 import './Footer.css'; // External CSS for styling
 
 const Footer = () => {
@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="footer-container">
         <div className="footer-column">
           <a href="/" className="footer-logo-link">
-            <img src={logo} alt="MediQ Logo" className="footer-logo" />
+            <img src={logo} alt="Fraha Logo" className="footer-logo" />
           </a>
           <p className="footer-tagline">Empowering health through knowledge</p>
           <div className="social-links">
@@ -35,7 +35,7 @@ const Footer = () => {
           <h3 className="footer-heading">Quick Links</h3>
           <ul className="footer-links">
             <li><a href="/about">About Us</a></li>
-            <li><a href="/checker">MediQ</a></li>
+            <li><a href="/checker">fraha</a></li>
             <li><a href="/drugs">Drug Database</a></li>
             <li><a href="/interactions">Interactions</a></li>
             <li><a href="/resources">Resources</a></li>
@@ -65,7 +65,7 @@ const Footer = () => {
       </div>
 
       <div className="footer-bottom">
-        <p>© 2025 MediQ. All rights reserved.</p>
+        <p>© 2025 fraha. All rights reserved.</p>
         <ul className="footer-policies">
           <li><a href="/privacy">Privacy Policy</a></li>
           <li><a href="/terms">Terms of Service</a></li>
